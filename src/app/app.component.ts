@@ -1,14 +1,21 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { LogoButtonComponent } from './logo-button/logo-button.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, LogoButtonComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
 export class AppComponent {
-  title = 'TranswarpConduit';
+  title = 'World';
+  authKey:String = '';
+  getKey(val:String){
+    this.authKey = val;
+    alert("Your Key is " + this.authKey);
+    
+  }
 }
