@@ -9,5 +9,4 @@ import { CommonModule } from '@angular/common';
   styleUrl: './logo-button.component.less'
 })
 export class LogoButtonComponent {
-
 }
