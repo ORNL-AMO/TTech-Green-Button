@@ -12,12 +12,28 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent {
-  title = 'World';
+  title = 'World';    
+  file!:File;
+  fileText!:String;
   authKey:String = '';
+
   getKey(val:String){
     this.authKey = val;
     alert("Your Key is " + this.authKey);
     
   }
-  
+  onChange(event:any){
+    console.log(event);
+    this.file = event.target.files[0];
+
+    if(this.file){
+      console.log("File recieved");
+    const reader = new FileReader();
+    reader.onload =()=>{
+      this.fileText = reader.result as String;
+      console.log(this.fileText)
+    }
+    reader.readAsText(this.file);
+    }
+  }
 }

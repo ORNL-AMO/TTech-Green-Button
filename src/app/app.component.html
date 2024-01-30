@@ -1,26 +1,27 @@
 <main class="main">
   <div class="content" >
-    <form class="col-10 offset-1">
-        <div class="row col-5">
-        <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
-        <input id="inputKeyBox" type="text" class="form-control" #authKey (keyup.enter)="getKey(authKey.value)" placeholder="Key">
-        <app-logo-button class="offset-3 mt-3" (click)="getKey(authKey.value)"></app-logo-button>
+    <div class="col-10 offset-1">
+      <form>
+          <div class="row col-6">
+            <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
+            <input id="inputKeyBox" type="text" class="form-control" #authKey (keyup.enter)="getKey(authKey.value)" placeholder="Key">
+            <app-logo-button class="offset-3 mt-3" (click)="getKey(authKey.value)"></app-logo-button>
+          </div>
+      </form>
+
+      <form id="inputFile">
+        <div class="row col-6">
+          <div class="d-grid col-6">
+            <label class="btn btn-primary btn-lg" for="dataFile">Import</label>
+            <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
+          </div>
+          <div class="d-grid col-6">
+            <label class="btn btn-primary btn-lg" for="">export</label>
+
+          </div>
       </div>
     </form>
-
-    <form id="inputFile">
-      <label class="inputLabel" for="dataFile">Import:</label>
-      <input type="file" name="myfile" >
-      <br>
-      <br>
-      <div class="container">
-        <div class="button-wrap">
-          <label class="button" for="upload">Import File</label>
-          <input id="upload"  type="file" name="testfile">
-        </div>
-      </div>
-    </form>
-
+    </div>
   </div>
 </main>
 
