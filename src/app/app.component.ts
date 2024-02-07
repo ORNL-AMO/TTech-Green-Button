@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { LogoButtonComponent } from './logo-button/logo-button.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { ExportService } from './export.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent {
   fileText!:String;
   authKey:String = '';
 
+  constructor(public exportServ: ExportService){}
   getKey(val:String){
     this.authKey = val;
     alert("Your Key is " + this.authKey);
@@ -35,5 +37,9 @@ export class AppComponent {
     }
     reader.readAsText(this.file);
     }
+  }
+
+  export(){
+    console.log( this.exportServ.exportExcel())
   }
 }

@@ -8,19 +8,26 @@
             <app-logo-button class="offset-3 mt-3" (click)="getKey(authKey.value)"></app-logo-button>
           </div>
       </form>
-
       <form id="inputFile">
         <div class="row col-6">
           <div class="d-grid col-6">
             <label class="btn btn-primary btn-lg" for="dataFile">Import</label>
             <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
           </div>
-          <div class="d-grid col-6">
-            <label class="btn btn-primary btn-lg" for="">export</label>
+        <div ngbDropdown class="d-grid col-6">
+          <button type="button" class="btn btn-primary btn-lg" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <div class="d-grid">
+          <button ngbDropdownItem type="button" (click)="export()">Export As XLSX</button>
+          <button ngbDropdownItem>Another Action</button>
+          <button ngbDropdownItem>Something else is here</button>
+        </div></div>
+                
+            
 
           </div>
-      </div>
-    </form>
+        </div>
+      </form>
     </div>
   </div>
 </main>
