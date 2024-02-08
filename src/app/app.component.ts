@@ -4,6 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { LogoButtonComponent } from './logo-button/logo-button.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ExportService } from './export.service';
+import { OnInit } from '@angular/core';
+import{ Constants } from './config/constants';
+import { ApiHttpService } from './api.service';
 
 @Component({
   selector: 'app-root',
@@ -11,14 +14,19 @@ import { ExportService } from './export.service';
   imports: [CommonModule, RouterOutlet, LogoButtonComponent,NgbModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
+
+
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
+  apiTitle = Constants.TitleOfSite; 
   title = 'World';    
   file!:File;
   fileText!:String;
   authKey:String = '';
 
-  constructor(public exportServ: ExportService){}
+  constructor(public exportServ: ExportService){
+    console.log(Constants.API_ENDPOINT); 
+  }
   getKey(val:String){
     this.authKey = val;
     alert("Your Key is " + this.authKey);
@@ -41,5 +49,13 @@ export class AppComponent {
 
   export(){
     console.log( this.exportServ.exportExcel())
+  }
+
+  ngOnInit() { 
+    console.log(this.apiTitle); 
+  } 
+
+  getForms(){
+    console.log('https://utilityapi.com/api/v2/forms')
   }
 }
