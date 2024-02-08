@@ -1,0 +1,15 @@
+{
+    "authorization_uid": null,
+    "created": "2024-02-07T21:02:36.325249+00:00",
+    "customer_email": "",
+    "disabled": false,
+    "is_archived": false,
+    "scope": {},
+    "template_uid": "c42af1c1",
+    "uid": "400725",
+    "updated": "2024-02-07T21:02:36.334933+00:00",
+    "url": "https://utilityapi.com/authorize/TTUGreenButton?f=14565229-85d0-4052-a319-b78bb338d3e8",
+    "user_email": "capowell42@tntech.edu",
+    "user_uid": "261789",
+    "utility": ""
+}
