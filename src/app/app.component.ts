@@ -7,6 +7,7 @@ import { ExportService } from './export.service';
 import { OnInit } from '@angular/core';
 import{ Constants } from './config/constants';
 import { ApiHttpService } from './api.service';
+import { HttpClient } from '@angular/common/http'; 
 
 @Component({
   selector: 'app-root',
@@ -24,12 +25,16 @@ export class AppComponent implements OnInit{
   fileText!:String;
   authKey:String = '';
 
-  constructor(public exportServ: ExportService){
+  constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
     console.log(Constants.API_ENDPOINT); 
   }
   getKey(val:String){
     this.authKey = val;
-    alert("Your Key is " + this.authKey);
+    //alert("Your Key is " + this.authKey);
+
+    this.apiServ.get('https://utilityapi.com/api/v2/authorizations?access_token=3959c8c3f5a44d9cad67534d9910d1b9').subscribe(data => {
+      console.log(data)
+    });
     
   }
   onChange(event:any){
@@ -56,6 +61,12 @@ export class AppComponent implements OnInit{
   } 
 
   getForms(){
-    console.log('https://utilityapi.com/api/v2/forms')
+    this.http.get('https://utilityapi.com/api/v2/authorizations?access_token=3959c8c3f5a44d9cad67534d9910d1b9').subscribe(data => {
+   console.log(data);
+    });
+  }
+
+  apiCall(){
+
   }
 }
