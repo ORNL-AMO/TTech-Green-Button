@@ -9,6 +9,7 @@ import{ Constants } from './config/constants';
 import { ApiHttpService } from './api.service';
 import { HttpClient } from '@angular/common/http'; 
 import { constants } from 'node:buffer';
+import { stringify } from 'node:querystring';
 
 @Component({
   selector: 'app-root',
@@ -66,9 +67,9 @@ export class AppComponent implements OnInit{
 
   getForms(){
     this.http.get(Constants.API_ENDPOINT1 + 'forms' + this.apiKey).subscribe(data => {
-      console.log(data);
-      uid = data['uid'];
-      
+      data = JSON.stringify(data,null,2)
+      let result:any = JSON.parse(data as string)
+      console.log(result.uid);
     });
   }
 
