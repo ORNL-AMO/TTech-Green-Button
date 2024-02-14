@@ -69,7 +69,7 @@ export class AppComponent implements OnInit{
     this.http.get(Constants.API_ENDPOINT1 + 'forms' + this.apiKey).subscribe(data => {
       data = JSON.stringify(data,null,2)
       let result:any = JSON.parse(data as string)
-      console.log(result.uid);
+      console.log(result.uid as object);
     });
   }
 
