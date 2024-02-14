@@ -8,6 +8,7 @@ import { OnInit } from '@angular/core';
 import{ Constants } from './config/constants';
 import { ApiHttpService } from './api.service';
 import { HttpClient } from '@angular/common/http'; 
+import { constants } from 'node:buffer';
 
 @Component({
   selector: 'app-root',
@@ -24,9 +25,11 @@ export class AppComponent implements OnInit{
   file!:File;
   fileText!:String;
   authKey:String = '';
+  apiKey:String ='?access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization key for the account that we are using for testing. Change this code to use a different account 
 
   constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
     console.log(Constants.API_ENDPOINT); 
+
   }
   getKey(val:String){
     this.authKey = val;
@@ -35,6 +38,7 @@ export class AppComponent implements OnInit{
     this.apiServ.get('https://utilityapi.com/api/v2/authorizations?access_token=3959c8c3f5a44d9cad67534d9910d1b9').subscribe(data => {
       console.log(data)
     });
+    
     
   }
   onChange(event:any){
@@ -61,8 +65,10 @@ export class AppComponent implements OnInit{
   } 
 
   getForms(){
-    this.http.get('https://utilityapi.com/api/v2/authorizations?access_token=3959c8c3f5a44d9cad67534d9910d1b9').subscribe(data => {
-   console.log(data);
+    this.http.get(Constants.API_ENDPOINT1 + 'forms' + this.apiKey).subscribe(data => {
+      console.log(data);
+      uid = data['uid'];
+      
     });
   }
 
