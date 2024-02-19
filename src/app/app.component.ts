@@ -37,7 +37,8 @@ export class AppComponent {
       reader.onload = () => {
         this.fileText = reader.result as String;
         console.log(this.fileText)
-        let jsonData = this.convertXML2JSON(this.fileText);
+        this.convertXML2JSON(this.fileText);
+
       }
       //reader.readAsText(this.file);
       //this.exportServ.exportExcel(this.file);
@@ -48,7 +49,7 @@ export class AppComponent {
     //console.log(this.exportServ.exportExcel(this.file))
   }
 
-  convertXML2JSON = async (xmlData: String): Promise<any> => {
+  convertXML2JSON = (xmlData: String) => {
     const parser = new xml2js.Parser({
       explicitArray: false, // Do not put child nodes in an array if there is only one
       mergeAttrs: true, // Merge attributes directly into the parent object
@@ -58,18 +59,22 @@ export class AppComponent {
     });
 
     try {
-      const result = await parser.parseStringPromise(xmlData);
+      const result = parser.parseString(xmlData)
       console.log("JSON Output:", JSON.stringify(result, null, 4));
     }
     catch (error) {
       console.error("Error parsing XML:", error);
     }
-
-    return parser.parseStringPromise(xmlData)
   }
 
-  convertJSON2XLSX = async (jsonData: any): Promise<void> => {
-    const worksheet = XLSX.utils.json_to_sheet(jsonData);
-    const workbook = XLSX.utils.book_new();
+  convertJSON2XLSX = (jsonData: any) => {
+    let workbook = new ExcelJS.Workbook();
+    var request = new XMLHttpRequest();
+    request.open("GET", "/assets/csv_templates/VERIFI-Import-Data.xlsx", true);
+    request.responseType = "blob";
+    request.onload = () => {
+      workbook.xlsx.load(request.response).then(() => {
+      });
+    };
   }
 };
