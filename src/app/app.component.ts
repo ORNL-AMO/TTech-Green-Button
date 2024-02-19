@@ -4,7 +4,6 @@ import { RouterOutlet } from '@angular/router';
 import { LogoButtonComponent } from './logo-button/logo-button.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ExportService } from './export.service';
-import { parseString } from 'xml2js';
 import * as xml2js from 'xml2js';
 import * as fs from 'fs';
 import * as XLSX from 'xlsx';
