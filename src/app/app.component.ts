@@ -5,9 +5,7 @@ import { LogoButtonComponent } from './logo-button/logo-button.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ExportService } from './export.service';
 import * as xml2js from 'xml2js';
-import * as fs from 'fs';
-import * as XLSX from 'xlsx';
-XLSX.set_fs(fs);
+import * as ExcelJS from 'exceljs';
 
 @Component({
   selector: 'app-root',
@@ -39,10 +37,10 @@ export class AppComponent {
       reader.onload = () => {
         this.fileText = reader.result as String;
         console.log(this.fileText)
-        this.convertXML2JSON(this.fileText);
+        let jsonData = this.convertXML2JSON(this.fileText);
       }
-      reader.readAsText(this.file);
-      this.exportServ.exportExcel(this.file);
+      //reader.readAsText(this.file);
+      //this.exportServ.exportExcel(this.file);
     }
   }
 
@@ -50,7 +48,7 @@ export class AppComponent {
     //console.log(this.exportServ.exportExcel(this.file))
   }
 
-  convertXML2JSON = async (xmlData: String): Promise<void> => {
+  convertXML2JSON = async (xmlData: String): Promise<any> => {
     const parser = new xml2js.Parser({
       explicitArray: false, // Do not put child nodes in an array if there is only one
       mergeAttrs: true, // Merge attributes directly into the parent object
@@ -66,5 +64,12 @@ export class AppComponent {
     catch (error) {
       console.error("Error parsing XML:", error);
     }
+
+    return parser.parseStringPromise(xmlData)
+  }
+
+  convertJSON2XLSX = async (jsonData: any): Promise<void> => {
+    const worksheet = XLSX.utils.json_to_sheet(jsonData);
+    const workbook = XLSX.utils.book_new();
   }
 };
