@@ -47,8 +47,11 @@ export class AppComponent implements OnInit{
     }
   }
 
-  export(){
+  exportAsExcel(){
     console.log( this.exportServ.exportExcel())
+  }
+  exportAsJson(){
+    console.log( this.exportServ.exportJSON())
   }
 
   ngOnInit() { 

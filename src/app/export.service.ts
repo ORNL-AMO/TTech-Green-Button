@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as ExcelJS from 'exceljs';
+import { blob, json } from 'stream/consumers';
 
 
 
@@ -39,5 +40,32 @@ export class ExportService {
         console.error("Error exporting Excel file:", error);
       });
   }
-  
+  exportJSON(){
+    const data = {
+      name: 'John Doe',
+      age: 30,
+      city: 'New York',
+      is_student: false,
+      grades: [95, 88, 72],
+    };
+
+    
+    let jsonData = JSON.stringify(data,null,2);
+    let fileType = 'application/json';
+    const blob = new Blob([jsonData], {type:fileType});
+    let a = document.createElement("a");
+    let url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = "jstest.json";
+
+    document.body.appendChild(a);
+    a.click();
+
+    // Release resources associated with the URL
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+
+    console.log("Json file exported successfully");
+  }
 }
