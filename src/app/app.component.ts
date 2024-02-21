@@ -51,9 +51,8 @@ export class AppComponent {
 
   convertJSONToXML(jsonData: any) {
     var x2js = new X2JS();
-    var document = x2js.xml2js(jsonData);
 
-    var xmlData = x2js.js2xml(document);
+    var xmlData = x2js.js2xml(jsonData);
     console.log(xmlData);
   }
 
