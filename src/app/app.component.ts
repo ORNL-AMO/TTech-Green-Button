@@ -34,14 +34,12 @@ export class AppComponent {
     if (this.file) {
       console.log("File received");
       const reader = new FileReader(); // Declare the FileReader variable
+      reader.readAsText(this.file);
       reader.onload = () => {
         this.fileText = reader.result as String;
         console.log(this.fileText)
         this.convertXML2JSON(this.fileText);
-
       }
-      //reader.readAsText(this.file);
-      //this.exportServ.exportExcel(this.file);
     }
   }
 
