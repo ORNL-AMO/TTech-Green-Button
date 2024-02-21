@@ -36,9 +36,9 @@ export class AppComponent {
       const reader = new FileReader(); // Declare the FileReader variable
       reader.readAsText(this.file);
       reader.onload = () => {
-        this.fileText = reader.result as String;
-        console.log(this.fileText)
-        this.convertXML2JSON(this.fileText);
+        let obj = JSON.stringify(reader.result);
+        let jdata = JSON.parse(obj);
+        console.log(jdata);
       }
     }
   }
@@ -46,25 +46,7 @@ export class AppComponent {
   export() {
     //console.log(this.exportServ.exportExcel(this.file))
   }
-
-  convertXML2JSON = (xmlData: String) => {
-    const parser = new xml2js.Parser({
-      explicitArray: false, // Do not put child nodes in an array if there is only one
-      mergeAttrs: true, // Merge attributes directly into the parent object
-      normalize: true, // Normalize the XML into a valid JSON structure
-      trim: true, // Trim whitespace from text nodes
-      // Other options to come...
-    });
-
-    try {
-      const result = parser.parseString(xmlData)
-      console.log("JSON Output:", JSON.stringify(result, null, 4));
-    }
-    catch (error) {
-      console.error("Error parsing XML:", error);
-    }
-  }
-
+/*
   convertJSON2XLSX = (jsonData: any) => {
     let workbook = new ExcelJS.Workbook();
     var request = new XMLHttpRequest();
@@ -74,5 +56,5 @@ export class AppComponent {
       workbook.xlsx.load(request.response).then(() => {
       });
     };
-  }
+  }*/
 };
