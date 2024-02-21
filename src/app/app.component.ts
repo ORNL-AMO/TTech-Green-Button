@@ -44,6 +44,7 @@ export class AppComponent {
         let obj = JSON.stringify(reader.result);
         let jdata = JSON.parse(obj);
         console.log(jdata);
+        this.convertJSONToXML(jdata);
       }
     }
   }
@@ -51,8 +52,6 @@ export class AppComponent {
   convertJSONToXML(jsonData: any) {
     var x2js = new X2JS();
     var document = x2js.xml2js(jsonData);
-
-    console.log(document);
 
     var xmlData = x2js.js2xml(document);
     console.log(xmlData);
