@@ -13,6 +13,7 @@ import { stringify } from 'node:querystring';
 import { parse } from 'node:path';
 import { count } from 'node:console';
 import { SourceTextModule } from 'node:vm';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -68,40 +69,32 @@ export class AppComponent implements OnInit{
   returnForm: any
   uid!: String
   authMeters: any
-  getForms(){
-    this.http.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(data => {
-      //option 1
-      this.returnForm = data
-      //console.log(this.returnForm.forms[0].uid)
-      this.uid = this.returnForm.forms[0].uid;
-      console.log('this one is '+this.uid)
-      // option 2
-      let stringData = JSON.stringify(data,null,2)
-      let parseData = JSON.parse(stringData)
-      //console.log(parseData.forms[0].uid)
-      console.log('This is uid ' + this.uid);
-      this.http.post(Constants.API_ENDPOINT1 + 'forms/' +this.uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}').subscribe(data => {
-        console.log(data)
-        let referral:any = data;
-        console.log(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken)
-        this.http.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken).subscribe(data => {
-          console.log(data);
-          this.authMeters = data
-          this.http.get('https://utilityapi.com/api/v2/files/meters_bills_csv?meters=1540205&'+this.accessToken,{responseType:'text'}).subscribe(data =>{
-            console.log(data)
-            
-            let test = JSON.stringify(data, null, 2);
-            let test2 = JSON.parse(test)
-            let blobl:any = data;
-            
-            console.log(test2.utility_service_id)
-          })
-          });
-      });
-    });
-    //let uid: String = this.returnForm.forms[0].uid;
-
-
+  async getForms(){
+    // this.http.get<any>(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(data => {
+    //   this.returnForm = data;
+    //   this.uid = this.returnForm.forms[0].uid;
+    //   console.log('this one is '+this.uid)
+    //   this.http.post(Constants.API_ENDPOINT1 + 'forms/' +this.uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}').subscribe(data => {
+    //     console.log(data)
+    //     let referral:any = data;
+    //     console.log(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken)
+    //     this.http.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken).subscribe(data => {
+    //       console.log(data);
+    //       this.authMeters = data
+    //       });
+    //   });
+    // });
+    this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(result =>{
+      console.log(result)
+    })
+    try{
+    const data:any = await lastValueFrom(this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken)); 
+    const referral:any = await lastValueFrom(this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}'))
+    const authForm:any = await lastValueFrom(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken))
+    console.log(authForm)
+  } catch (error){
+      console.log("Error")
+    }
   }
 
   apiCall(){
