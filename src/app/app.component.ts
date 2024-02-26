@@ -65,6 +65,20 @@ export class AppComponent {
     console.log(xmlData);
   }
 
+  convertJSONToExcel(jsonData: any) {
+    const Excel = require('exceljs');
+    const workbook = new Excel.Workbook();
+
+    const facilitiesSheet = workbook.addWorksheet('Facilities');
+    const metersutilitiesSheet = workbook.addWorksheet('Meters-Utilities');
+    const electricitySheet = workbook.addWorksheet('Electricity');
+    const stationaryotherSheet = workbook.addWorksheet('Stationary Fuel - Other Energy');
+    const mobileSheet = workbook.addWorksheet('Mobile Fuel');
+    const waterSheet = workbook.addWorksheet('Water');
+    const otheremmissionsSheet = workbook.addWorksheet('Other Utility - Emission');
+    const predictorsSheet = workbook.addWorksheet('Predictors');
+  }
+
 
   /*
     convertJSON2XLSX = (jsonData: any) => {
