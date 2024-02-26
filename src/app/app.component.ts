@@ -38,11 +38,13 @@ export class AppComponent {
 
     if (this.file) {
       console.log("File received");
-      const reader = new FileReader(); // Declare the FileReader variable
+
+      // Declare the FileReader variable
+      const reader = new FileReader();
       reader.readAsText(this.file);
       reader.onload = () => {
-        let obj = JSON.stringify(reader.result);
-        let jdata = JSON.parse(obj);
+        let obj: string = JSON.stringify(reader.result);
+        let jdata: string = JSON.parse(obj);
         console.log(jdata);
         this.convertJSONToXML(jdata);
       }
@@ -50,9 +52,16 @@ export class AppComponent {
   }
 
   convertJSONToXML(jsonData: any) {
-    var x2js = new X2JS();
+    //Create new instance of X2JS
+    var x2js: X2JS = new X2JS();
 
-    var xmlData = x2js.js2xml(jsonData);
+    //Translate the JSON to XML
+    var xmlData: string = x2js.js2xml(jsonData);
+
+    //Replace the string &quot; with nothing
+    xmlData = xmlData.replace(/&quot;/g, '');
+
+    //Output the XML to the console
     console.log(xmlData);
   }
 
