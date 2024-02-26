@@ -8,11 +8,9 @@ import { OnInit } from '@angular/core';
 import{ Constants } from './config/constants';
 import { ApiHttpService } from './api.service';
 import { HttpClient } from '@angular/common/http'; 
-import { constants } from 'node:buffer';
-import { stringify } from 'node:querystring';
-import { parse } from 'node:path';
-import { count } from 'node:console';
-import { SourceTextModule } from 'node:vm';
+import { map, of, catchError, Observer} from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import { error } from 'console';
 
 @Component({
   selector: 'app-root',
@@ -68,8 +66,11 @@ export class AppComponent implements OnInit{
   returnForm: any
   uid!: String
   authMeters: any
+
   getForms(){
+
     this.http.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(data => {
+
       //option 1
       this.returnForm = data
       //console.log(this.returnForm.forms[0].uid)
@@ -88,12 +89,9 @@ export class AppComponent implements OnInit{
           console.log(data);
           this.authMeters = data
           this.http.get('https://utilityapi.com/api/v2/files/meters_bills_csv?meters=1540205&'+this.accessToken,{responseType:'text'}).subscribe(data =>{
-            console.log(data)
-            
+            console.log(data)   
             let test = JSON.stringify(data, null, 2);
-            let test2 = JSON.parse(test)
-            let blobl:any = data;
-            
+            let test2 = JSON.parse(test)            
             console.log(test2.utility_service_id)
           })
           });
