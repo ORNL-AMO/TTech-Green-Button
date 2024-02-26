@@ -77,6 +77,37 @@ export class AppComponent {
     const waterSheet = workbook.addWorksheet('Water');
     const otheremmissionsSheet = workbook.addWorksheet('Other Utility - Emission');
     const predictorsSheet = workbook.addWorksheet('Predictors');
+
+
+    //These keys are not accurate to the JSON at the moment
+    metersutilitiesSheet.columns = [
+      { header: 'Facility Name', key: "Facility Name", width: 20 },
+      { header: 'Meter Number (unique)', key: "Facility ID", width: 20 },
+      { header: 'Source', key: "Facility ID", width: 20 },
+      { header: 'Scope', key: "Facility ID", width: 20 },
+      { header: 'Meter Name (Display)', key: "Facility ID", width: 20 },
+      { header: 'Meter Group', key: "Facility ID", width: 20 },
+      { header: 'Calendarize Data?', key: "Facility ID", width: 20 },
+      { header: 'Phase or Vehicle', key: "Facility ID", width: 20 },
+      { header: 'Fuel or Emission', key: "Facility ID", width: 20 },
+      { header: 'Collection Unit', key: "Facility ID", width: 20 },
+      { header: 'Energy Unit', key: "Facility ID", width: 20 },
+      { header: 'Distance Unit', key: "Facility ID", width: 20 },
+      { header: 'Estimation Method', key: "Facility ID", width: 20 },
+      { header: 'Heat Capacity or Fuel Efficiency', key: "Facility ID", width: 20 },
+      { header: 'Include In Energy', key: "Facility ID", width: 20 },
+      { header: 'Site To Source', key: "Facility ID", width: 20 },
+      { header: 'Agreement Type', key: "Facility ID", width: 20 },
+      { header: 'Retain RECS', key: "Facility ID", width: 20 },
+      { header: 'Account Number', key: "Facility ID", width: 20 },
+      { header: 'Utility Supplier', key: "Facility ID", width: 20 },
+      { header: 'Notes', key: "Facility ID", width: 20 },
+      { header: 'Building / Location', key: "Facility ID", width: 20 }
+    ];
+
+
+
+
   }
 
 
