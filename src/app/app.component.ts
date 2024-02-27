@@ -43,8 +43,7 @@ export class AppComponent {
       const reader = new FileReader();
       reader.readAsText(this.file);
       reader.onload = () => {
-        let obj: string = JSON.stringify(reader.result);
-        let jdata: string = JSON.parse(obj);
+        let jdata: string = JSON.parse(reader.result as string);
         console.log(jdata);
         this.convertJSONToXML(jdata);
       }
