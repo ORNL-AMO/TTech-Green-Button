@@ -46,6 +46,7 @@ export class AppComponent {
         let jdata: string = JSON.parse(reader.result as string);
         console.log(jdata);
         this.convertJSONToXML(jdata);
+        this.convertJSONToExcel(jdata);
       }
     }
   }
@@ -65,8 +66,7 @@ export class AppComponent {
   }
 
   convertJSONToExcel(jsonData: any) {
-    const Excel = require('exceljs');
-    const workbook = new Excel.Workbook();
+    const workbook = new ExcelJS.Workbook();
 
     const facilitiesSheet = workbook.addWorksheet('Facilities');
     const metersutilitiesSheet = workbook.addWorksheet('Meters-Utilities');
