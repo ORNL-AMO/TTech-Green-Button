@@ -47,13 +47,7 @@ export interface Source {
 }
 
 export interface LineItem {
-  cost: number
-  end: string
-  name: string
-  rate?: number
-  start: string
-  unit?: string
-  volume?: number
+
 }
 
 export interface Tier {
@@ -329,6 +323,21 @@ export class AppComponent {
       { header: 'Notes', key: "Facility ID", width: 20 },
       { header: 'Building / Location', key: "Facility ID", width: 20 }
     ];
+
+    //Assign parts of the jsonData object to different TS objects
+    let root: Root = jsonData;
+    let base: Base = root.base;
+    let sources: Source[] = root.sources;
+    let line_items: LineItem[] = root.line_items
+    let tiers: Tier[] = root.tiers;
+
+    //Test the above objects
+    console.log(root);
+    console.log(base);
+    console.log(sources);
+    console.log(line_items);
+    console.log(tiers);
+
 
 
 
