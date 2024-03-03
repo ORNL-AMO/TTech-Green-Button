@@ -109,10 +109,10 @@ export class AppComponent {
 
   convertJSONToXML(jsonData: any) {
     //Create new instance of X2JS
-    var x2js: X2JS = new X2JS();
+    let x2js: X2JS = new X2JS();
 
     //Translate the JSON to XML
-    var xmlData: string = x2js.js2xml(jsonData);
+    let xmlData: string = x2js.js2xml(jsonData);
 
     //Replace the string &quot; with nothing
     xmlData = xmlData.replace(/&quot;/g, '');
