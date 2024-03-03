@@ -129,7 +129,6 @@ export class AppComponent {
     const otheremmissionsSheet = workbook.addWorksheet('Other Utility - Emission');
     const predictorsSheet = workbook.addWorksheet('Predictors');
 
-    //The below sheets are not accurate to the JSON at the moment
     //Facilities
     facilitiesSheet.columns = [
       { header: 'Facility Name', key: "Facility Name", width: 20 },
@@ -144,7 +143,7 @@ export class AppComponent {
       { header: 'Contact Email', key: "Contact Email", width: 20 },
     ];
 
-
+    //Meters-Utilities
     metersutilitiesSheet.columns = [
       { header: 'Facility Name', key: "Facility Name", width: 20 },
       { header: 'Meter Number (unique)', key: "Meter Number (unique)", width: 20 },
@@ -170,6 +169,7 @@ export class AppComponent {
       { header: 'Building / Location', key: "Building / Location", width: 20 }
     ];
 
+    //Electricity
     electricitySheet.columns = [
       { header: 'Meter Number', key: "Meter Number", width: 20 },
       { header: 'Read Date', key: "Read Date", width: 20 },
@@ -199,129 +199,62 @@ export class AppComponent {
       { header: 'Other Charge', key: "Other Charge", width: 20 }
     ];
 
+    //Stationary Fuel - Other Energy
     stationaryotherSheet.columns = [
-      { header: 'Facility Name', key: "Facility Name", width: 20 },
-      { header: 'Meter Number (unique)', key: "Facility ID", width: 20 },
-      { header: 'Source', key: "Facility ID", width: 20 },
-      { header: 'Scope', key: "Facility ID", width: 20 },
-      { header: 'Meter Name (Display)', key: "Facility ID", width: 20 },
-      { header: 'Meter Group', key: "Facility ID", width: 20 },
-      { header: 'Calendarize Data?', key: "Facility ID", width: 20 },
-      { header: 'Phase or Vehicle', key: "Facility ID", width: 20 },
-      { header: 'Fuel or Emission', key: "Facility ID", width: 20 },
-      { header: 'Collection Unit', key: "Facility ID", width: 20 },
-      { header: 'Energy Unit', key: "Facility ID", width: 20 },
-      { header: 'Distance Unit', key: "Facility ID", width: 20 },
-      { header: 'Estimation Method', key: "Facility ID", width: 20 },
-      { header: 'Heat Capacity or Fuel Efficiency', key: "Facility ID", width: 20 },
-      { header: 'Include In Energy', key: "Facility ID", width: 20 },
-      { header: 'Site To Source', key: "Facility ID", width: 20 },
-      { header: 'Agreement Type', key: "Facility ID", width: 20 },
-      { header: 'Retain RECS', key: "Facility ID", width: 20 },
-      { header: 'Account Number', key: "Facility ID", width: 20 },
-      { header: 'Utility Supplier', key: "Facility ID", width: 20 },
-      { header: 'Notes', key: "Facility ID", width: 20 },
-      { header: 'Building / Location', key: "Facility ID", width: 20 }
+      { header: 'Meter Number', key: "Meter Number", width: 20 },
+      { header: 'Read Date', key: "Read Date", width: 20 },
+      { header: 'Total Consumption', key: "Total Consumption", width: 20 },
+      { header: 'Total Cost', key: "Total Cost", width: 20 },
+      { header: 'Higher Heating Value', key: "Higher Heating Value", width: 20 },
+      { header: 'Commodity Charge', key: "Commodity Charge", width: 20 },
+      { header: 'Delivery Charge', key: "Delivery Charge", width: 20 },
+      { header: 'Other Charge', key: "Other Charge", width: 20 },
+      { header: 'Demand Usage', key: "Demand Usage", width: 20 },
+      { header: 'Demand Charge', key: "Demand Charge", width: 20 },
+      { header: 'Local Sales Tax', key: "Local Sales Tax", width: 20 },
+      { header: 'State Sales Tax', key: "State Sales Tax", width: 20 },
+      { header: 'Late Payment', key: "Late Payment", width: 20 },
     ];
 
+    //Mobile Fuel
     mobileSheet.columns = [
-      { header: 'Facility Name', key: "Facility Name", width: 20 },
-      { header: 'Meter Number (unique)', key: "Facility ID", width: 20 },
-      { header: 'Source', key: "Facility ID", width: 20 },
-      { header: 'Scope', key: "Facility ID", width: 20 },
-      { header: 'Meter Name (Display)', key: "Facility ID", width: 20 },
-      { header: 'Meter Group', key: "Facility ID", width: 20 },
-      { header: 'Calendarize Data?', key: "Facility ID", width: 20 },
-      { header: 'Phase or Vehicle', key: "Facility ID", width: 20 },
-      { header: 'Fuel or Emission', key: "Facility ID", width: 20 },
-      { header: 'Collection Unit', key: "Facility ID", width: 20 },
-      { header: 'Energy Unit', key: "Facility ID", width: 20 },
-      { header: 'Distance Unit', key: "Facility ID", width: 20 },
-      { header: 'Estimation Method', key: "Facility ID", width: 20 },
-      { header: 'Heat Capacity or Fuel Efficiency', key: "Facility ID", width: 20 },
-      { header: 'Include In Energy', key: "Facility ID", width: 20 },
-      { header: 'Site To Source', key: "Facility ID", width: 20 },
-      { header: 'Agreement Type', key: "Facility ID", width: 20 },
-      { header: 'Retain RECS', key: "Facility ID", width: 20 },
-      { header: 'Account Number', key: "Facility ID", width: 20 },
-      { header: 'Utility Supplier', key: "Facility ID", width: 20 },
-      { header: 'Notes', key: "Facility ID", width: 20 },
-      { header: 'Building / Location', key: "Facility ID", width: 20 }
+      { header: 'Meter Number', key: "Meter Number", width: 20 },
+      { header: 'Read Date', key: "Read Date", width: 20 },
+      { header: 'Total Consumption or Total Distance', key: "Total Consumption or Total Distance", width: 20 },
+      { header: 'Fuel Efficiency', key: "Fuel Efficiency", width: 20 },
+      { header: 'Total Cost', key: "Total Cost", width: 20 },
+      { header: 'Other Charge', key: "Other Charge", width: 20 }
     ];
 
+    //Water
     waterSheet.columns = [
-      { header: 'Facility Name', key: "Facility Name", width: 20 },
-      { header: 'Meter Number (unique)', key: "Facility ID", width: 20 },
-      { header: 'Source', key: "Facility ID", width: 20 },
-      { header: 'Scope', key: "Facility ID", width: 20 },
-      { header: 'Meter Name (Display)', key: "Facility ID", width: 20 },
-      { header: 'Meter Group', key: "Facility ID", width: 20 },
-      { header: 'Calendarize Data?', key: "Facility ID", width: 20 },
-      { header: 'Phase or Vehicle', key: "Facility ID", width: 20 },
-      { header: 'Fuel or Emission', key: "Facility ID", width: 20 },
-      { header: 'Collection Unit', key: "Facility ID", width: 20 },
-      { header: 'Energy Unit', key: "Facility ID", width: 20 },
-      { header: 'Distance Unit', key: "Facility ID", width: 20 },
-      { header: 'Estimation Method', key: "Facility ID", width: 20 },
-      { header: 'Heat Capacity or Fuel Efficiency', key: "Facility ID", width: 20 },
-      { header: 'Include In Energy', key: "Facility ID", width: 20 },
-      { header: 'Site To Source', key: "Facility ID", width: 20 },
-      { header: 'Agreement Type', key: "Facility ID", width: 20 },
-      { header: 'Retain RECS', key: "Facility ID", width: 20 },
-      { header: 'Account Number', key: "Facility ID", width: 20 },
-      { header: 'Utility Supplier', key: "Facility ID", width: 20 },
-      { header: 'Notes', key: "Facility ID", width: 20 },
-      { header: 'Building / Location', key: "Facility ID", width: 20 }
+      { header: 'Meter Number', key: "Meter Number", width: 20 },
+      { header: 'Read Date', key: "Read Date", width: 20 },
+      { header: 'Total Consuption', key: "Total Consuption", width: 20 },
+      { header: 'Total Cost', key: "Total Cost", width: 20 },
+      { header: 'Commodity Charge', key: "Commodity Charge", width: 20 },
+      { header: 'Delivery Charge', key: "Delivery Charge", width: 20 },
+      { header: 'Other Charge', key: "Other Charge", width: 20 },
+      { header: 'Demand Usage', key: "Demand Usage", width: 20 },
+      { header: 'Demand Charge', key: "Demand Charge", width: 20 },
+      { header: 'Local Sales Tax', key: "Local Sales Tax", width: 20 },
+      { header: 'State Sales Tax', key: "State Sales Tax", width: 20 },
+      { header: 'Late Payment', key: "Late Payment", width: 20 },
     ];
 
+    //Other Utility - Emission
     otheremmissionsSheet.columns = [
-      { header: 'Facility Name', key: "Facility Name", width: 20 },
-      { header: 'Meter Number (unique)', key: "Facility ID", width: 20 },
-      { header: 'Source', key: "Facility ID", width: 20 },
-      { header: 'Scope', key: "Facility ID", width: 20 },
-      { header: 'Meter Name (Display)', key: "Facility ID", width: 20 },
-      { header: 'Meter Group', key: "Facility ID", width: 20 },
-      { header: 'Calendarize Data?', key: "Facility ID", width: 20 },
-      { header: 'Phase or Vehicle', key: "Facility ID", width: 20 },
-      { header: 'Fuel or Emission', key: "Facility ID", width: 20 },
-      { header: 'Collection Unit', key: "Facility ID", width: 20 },
-      { header: 'Energy Unit', key: "Facility ID", width: 20 },
-      { header: 'Distance Unit', key: "Facility ID", width: 20 },
-      { header: 'Estimation Method', key: "Facility ID", width: 20 },
-      { header: 'Heat Capacity or Fuel Efficiency', key: "Facility ID", width: 20 },
-      { header: 'Include In Energy', key: "Facility ID", width: 20 },
-      { header: 'Site To Source', key: "Facility ID", width: 20 },
-      { header: 'Agreement Type', key: "Facility ID", width: 20 },
-      { header: 'Retain RECS', key: "Facility ID", width: 20 },
-      { header: 'Account Number', key: "Facility ID", width: 20 },
-      { header: 'Utility Supplier', key: "Facility ID", width: 20 },
-      { header: 'Notes', key: "Facility ID", width: 20 },
-      { header: 'Building / Location', key: "Facility ID", width: 20 }
+      { header: 'Meter Number', key: "Meter Number", width: 20 },
+      { header: 'Read Date', key: "Read Date", width: 20 },
+      { header: 'Total Consuption', key: "Total Consuption", width: 20 },
+      { header: 'Total Cost', key: "Total Cost", width: 20 },
+      { header: 'Other Charge', key: "Other Charge", width: 20 }
     ];
 
+    //Predictors
     predictorsSheet.columns = [
       { header: 'Facility Name', key: "Facility Name", width: 20 },
-      { header: 'Meter Number (unique)', key: "Facility ID", width: 20 },
-      { header: 'Source', key: "Facility ID", width: 20 },
-      { header: 'Scope', key: "Facility ID", width: 20 },
-      { header: 'Meter Name (Display)', key: "Facility ID", width: 20 },
-      { header: 'Meter Group', key: "Facility ID", width: 20 },
-      { header: 'Calendarize Data?', key: "Facility ID", width: 20 },
-      { header: 'Phase or Vehicle', key: "Facility ID", width: 20 },
-      { header: 'Fuel or Emission', key: "Facility ID", width: 20 },
-      { header: 'Collection Unit', key: "Facility ID", width: 20 },
-      { header: 'Energy Unit', key: "Facility ID", width: 20 },
-      { header: 'Distance Unit', key: "Facility ID", width: 20 },
-      { header: 'Estimation Method', key: "Facility ID", width: 20 },
-      { header: 'Heat Capacity or Fuel Efficiency', key: "Facility ID", width: 20 },
-      { header: 'Include In Energy', key: "Facility ID", width: 20 },
-      { header: 'Site To Source', key: "Facility ID", width: 20 },
-      { header: 'Agreement Type', key: "Facility ID", width: 20 },
-      { header: 'Retain RECS', key: "Facility ID", width: 20 },
-      { header: 'Account Number', key: "Facility ID", width: 20 },
-      { header: 'Utility Supplier', key: "Facility ID", width: 20 },
-      { header: 'Notes', key: "Facility ID", width: 20 },
-      { header: 'Building / Location', key: "Facility ID", width: 20 }
+      { header: 'Date', key: "Date", width: 20 }
     ];
 
     //Assign parts of the jsonData object to different TS objects
