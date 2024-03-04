@@ -13,7 +13,7 @@ import { stringify } from 'node:querystring';
 import { parse } from 'node:path';
 import { count } from 'node:console';
 import { SourceTextModule } from 'node:vm';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +31,9 @@ export class AppComponent implements OnInit{
   fileText!:String;
   authKey:String = '';
   accessToken:String ='access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization key for the account that we are using for testing. Change this code to use a different account 
+  formUid:any
+  referralId:any
+
 
   constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
     console.log(Constants.API_ENDPOINT); 
@@ -63,13 +66,20 @@ export class AppComponent implements OnInit{
     console.log( this.exportServ.exportExcel())
   }
 
-  ngOnInit() { 
-    console.log(this.apiTitle); 
-  } 
   returnForm: any
   uid!: String
   authMeters: any
-  async getForms(){
+
+  ngOnInit() { 
+    console.log(this.apiTitle);
+
+  } 
+
+ 
+
+  async apiCall(){
+
+    
     // this.http.get<any>(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(data => {
     //   this.returnForm = data;
     //   this.uid = this.returnForm.forms[0].uid;
@@ -84,20 +94,84 @@ export class AppComponent implements OnInit{
     //       });
     //   });
     // });
-    this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(result =>{
-      console.log(result)
-    })
+
+    // this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(result =>{
+    //   console.log(result)
+    // })
+
     try{
-    const data:any = await lastValueFrom(this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken)); 
-    const referral:any = await lastValueFrom(this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}'))
-    const authForm:any = await lastValueFrom(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken))
-    console.log(authForm)
+    const data:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken); 
+    console.log(data)
+    console.log(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken)
+    const referral:any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}')
+    console.log(referral)
+    // const authForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken)
+    // console.log(authForm)
+    
+    try {
+      let ticks = 1000
+      let authForm: any = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
+        }, ticks); // 25000 milliseconds = 25 seconds
+      });
+      while (authForm.authorizations[0].status == "pending"){
+        ticks += 5000
+          authForm = await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
+          }, ticks); // 25000 milliseconds = 25 seconds
+        });
+      }
+      // Code to handle successful response
+      console.log(authForm);
+    } catch (error) {
+      // Code to handle error
+      console.error(error);
+    }
+    //console.log(authForm.status)
+    
   } catch (error){
       console.log("Error")
     }
-  }
 
-  apiCall(){
-
+  //  this.formUid  = await this.getFormUid(0)
+  //  console.log(this.formUid)
+  //  this.referralId = await this.postReferral()
+  //  console.log(this.referralId)
+  //  let meters = await this.getMeters()
+  //  console.log(meters)
   }
+  
+
+
+  // async getFormUid(formNumber: number):Promise<any>{
+  //   try{
+  //     const data:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken); 
+  //     // console.log(data)
+  //     return data.forms[formNumber].uid
+
+  //   } catch (error){
+  //       console.log("get form Error")
+  //     }
+  // }
+
+  // async postReferral():Promise<any>{
+  //   try{
+  //     const referral:any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +this.formUid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}')
+  //    // console.log(referral)
+  //     return referral.referral 
+  //     //console.log(authForm.status)
+      
+  //   } catch (error){
+  //       console.log("post referral error ")
+  //     }
+  // }
+
+  // async getMeters():Promise<any>{
+  //   const meters:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+this.referralId+'&include=meters&' + this.accessToken)
+  //   console.log(meters)
+  //   return meters 
+  // }
+
 }
