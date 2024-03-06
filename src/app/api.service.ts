@@ -15,17 +15,6 @@ export class ApiHttpService {
 
   public get(url: string, options?: any) { 
     return lastValueFrom(this.http.get(url, options));
-    // return this.http.get(url).pipe(
-    //   tap({
-    //       error: (error: { status: number; }) => {
-    //           if (error.status === 500) {
-    //               // Handle 500
-    //           } else if (error.status === 400) {
-    //               // Handle 400
-    //           } else if (error.status === 401) {
-    //               // Handle 401
-    //           }
-    //       }}));
   } 
 
   public post(url: string, data: any, options?: any) { 

@@ -79,26 +79,6 @@ export class AppComponent implements OnInit{
 
   async apiCall(){
 
-    
-    // this.http.get<any>(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(data => {
-    //   this.returnForm = data;
-    //   this.uid = this.returnForm.forms[0].uid;
-    //   console.log('this one is '+this.uid)
-    //   this.http.post(Constants.API_ENDPOINT1 + 'forms/' +this.uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}').subscribe(data => {
-    //     console.log(data)
-    //     let referral:any = data;
-    //     console.log(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken)
-    //     this.http.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken).subscribe(data => {
-    //       console.log(data);
-    //       this.authMeters = data
-    //       });
-    //   });
-    // });
-
-    // this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken).subscribe(result =>{
-    //   console.log(result)
-    // })
-
     try{
     const data:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken); 
     console.log(data)
@@ -107,7 +87,6 @@ export class AppComponent implements OnInit{
     console.log(referral)
     // const authForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken)
     // console.log(authForm)
-    
     try {
       let ticks = 1000
       let authForm: any = await new Promise((resolve) => {
@@ -135,43 +114,32 @@ export class AppComponent implements OnInit{
       console.log("Error")
     }
 
-  //  this.formUid  = await this.getFormUid(0)
-  //  console.log(this.formUid)
-  //  this.referralId = await this.postReferral()
-  //  console.log(this.referralId)
-  //  let meters = await this.getMeters()
-  //  console.log(meters)
+
   }
-  
-
-
-  // async getFormUid(formNumber: number):Promise<any>{
-  //   try{
-  //     const data:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken); 
-  //     // console.log(data)
-  //     return data.forms[formNumber].uid
-
-  //   } catch (error){
-  //       console.log("get form Error")
+  // async apiWait(endPoint:string){
+  //   try {
+  //     let ticks = 1000
+  //     let returnVal: any = await new Promise((resolve) => {
+  //       setTimeout(() => {
+  //         resolve(this.apiServ.get(endPoint));
+  //       }, ticks); // 25000 milliseconds = 25 seconds
+  //     });
+  //     while (returnVal.authorizations[0].status == "pending"){
+  //       ticks += 5000
+  //         returnVal = await new Promise((resolve) => {
+  //         setTimeout(() => {
+  //           resolve(this.apiServ.get(endPoint));
+  //         }, ticks); // 25000 milliseconds = 25 seconds
+  //       });
   //     }
+  //     // Code to handle successful response
+  //     console.log(returnVal);
+  //   } catch (error) {
+  //     // Code to handle error
+  //     console.error(error);
+  //   }
+  //   //console.log(authForm.status)
   // }
 
-  // async postReferral():Promise<any>{
-  //   try{
-  //     const referral:any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +this.formUid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}')
-  //    // console.log(referral)
-  //     return referral.referral 
-  //     //console.log(authForm.status)
-      
-  //   } catch (error){
-  //       console.log("post referral error ")
-  //     }
-  // }
-
-  // async getMeters():Promise<any>{
-  //   const meters:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+this.referralId+'&include=meters&' + this.accessToken)
-  //   console.log(meters)
-  //   return meters 
-  // }
 
 }
