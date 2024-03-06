@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ParseService } from './parse.service';
 
 describe('ParseService', () => {
