@@ -40,16 +40,7 @@ export class ExportService {
         console.error("Error exporting Excel file:", error);
       });
   }
-  exportJSON(){
-    const data = {
-      name: 'John Doe',
-      age: 30,
-      city: 'New York',
-      is_student: false,
-      grades: [95, 88, 72],
-    };
-
-    
+  exportJSON(data:any){
     let jsonData = JSON.stringify(data,null,2);
     let fileType = 'application/json';
     const blob = new Blob([jsonData], {type:fileType});

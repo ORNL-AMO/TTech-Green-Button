@@ -7,6 +7,9 @@ import { ExportService } from './export.service';
 import { OnInit } from '@angular/core';
 import{ Constants } from './config/constants';
 import { ApiHttpService } from './api.service';
+import { HttpClient } from '@angular/common/http'; 
+import { lastValueFrom } from 'rxjs';
+import test from 'node:test';
 
 @Component({
   selector: 'app-root',
@@ -21,11 +24,14 @@ export class AppComponent implements OnInit{
   apiTitle = Constants.TitleOfSite; 
   title = 'World';    
   file!:File;
-  fileText!:String;
+  fileText!:any;
+  displayFile!:String;
   authKey:String = '';
+  accessToken:String ='access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization key for the account that we are using for testing. Change this code to use a different account 
 
-  constructor(public exportServ: ExportService){
+  constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
     console.log(Constants.API_ENDPOINT); 
+
   }
   getKey(val:String){
     this.authKey = val;
@@ -40,8 +46,9 @@ export class AppComponent implements OnInit{
       console.log("File recieved");
     const reader = new FileReader();
     reader.onload =()=>{
-      this.fileText = reader.result as String;
-      console.log(this.fileText)
+      this.fileText = JSON.parse(reader.result as string);
+      this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Import Data</h3></div><div class="card-body" ><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
+      console.log(this.displayFile)
     }
     reader.readAsText(this.file);
     }
@@ -51,14 +58,25 @@ export class AppComponent implements OnInit{
     console.log( this.exportServ.exportExcel())
   }
   exportAsJson(){
-    console.log( this.exportServ.exportJSON())
+  
+    this.getForms().then( data =>{
+      this.exportServ.exportJSON(data);
+    });
+
   }
 
   ngOnInit() { 
     console.log(this.apiTitle); 
   } 
-
-  getForms(){
-    console.log('https://utilityapi.com/api/v2/forms')
+  async getForms():Promise<any>{
+    console.log(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken)
+    try{
+      const data = await lastValueFrom(this.http.get<any>(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken))
+      const test = data.forms[0];
+      //console.log(test)
+      return test;
+    } catch (error){
+      console.log("error")
+    }
   }
 }

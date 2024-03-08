@@ -20,20 +20,16 @@
           <div class="d-grid">
           <button ngbDropdownItem type="button" (click)="exportAsExcel()">Export As XLSX</button>
           <button ngbDropdownItem type="button" (click)="exportAsJson()">Export As Json</button>
-          <button ngbDropdownItem>Something else is here</button>
-        </div></div>
-        
-        
+          </div>
+        </div>
         <div>
-
           <button apiTest type="button" (click)="getForms()">Api Test</button>
         </div>
-                
-            
-
           </div>
         </div>
       </form>
+    </div>
+    <div [innerHTML]="displayFile" style="white-space: pre;">
     </div>
   </div>
 </main>

@@ -5,7 +5,7 @@ export class Constants {
     static API_ENDPOINT(API_ENDPOINT: string) {
       throw new Error('Method not implemented.');
     }
-    public readonly API_ENDPOINT: string = 'https://utilityapi.com/api/v2/'; 
+    public static API_ENDPOINT1: string = 'https://utilityapi.com/api/v2/'; 
     public readonly FORMS_ENDPOINT: string = 'https://utilityapi.com/api/v2/forms'; 
     public readonly AUTH_ENDPOINT: string = 'https://utilityapi.com/api/v2/authorizations'; 
     public readonly METER_ENDPOINT: string = 'https://utilityapi.com/api/v2/meters'; 
