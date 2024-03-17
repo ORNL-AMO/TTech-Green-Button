@@ -22,11 +22,11 @@
                   <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
                 </div>
                 <div ngbDropdown class="export-button">
-                  <button type="button" class="btn btn-primary btn-lg" id="dropdownBasic1" style="width: 160px;" ngbDropdownToggle>Export Data</button>
-                  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;" ngbDropdownToggle>Export Data</button>
+                  <div ngbDropdownMenu aria-labelledby="exportDropdown">
                     <div class="d-grid">
-                      <button ngbDropdownItem type="button" (click)="export()">Export as XLSX</button>
-                      <button ngbDropdownItem>Export as JSON</button>
+                      <button ngbDropdownItem type="button" (click)="exportAsExcel()">Export as XLSX</button>
+                      <button ngbDropdownItem type="button" (click)="exportAsJson()">Export as JSON</button>
                     </div>
                   </div>
                 </div>
@@ -34,8 +34,8 @@
             </form>
           </div>
         </div>
-        <div class="right-section">
-          <p>Right Test</p>
+        <div class="right-section" [innerHTML]="displayFile" style="white-space: pre;">
+
         </div>
       </div>
     </div>
