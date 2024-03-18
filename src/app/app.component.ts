@@ -28,14 +28,22 @@ export class AppComponent implements OnInit{
   displayFile!:String;
   authKey:String = '';
   accessToken:String ='access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization key for the account that we are using for testing. Change this code to use a different account 
+  formUid:any
+  referralId:any
+  authForm: any;
+
 
   constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
     console.log(Constants.API_ENDPOINT); 
 
+
   }
   getKey(val:String){
     this.authKey = val;
-    alert("Your Key is " + this.authKey);
+    //alert("Your Key is " + this.authKey);
+
+    
+    
   }
 
   onChange(event: any) {
@@ -62,24 +70,55 @@ export class AppComponent implements OnInit{
   }
   exportAsJson(){
   
-    this.getForms().then( data =>{
-      this.exportServ.exportJSON(data);
-    });
+    // this.getForms().then( data =>{
+    //   this.exportServ.exportJSON(data);
+    // });
 
   }
 
+
   ngOnInit() { 
-    console.log(this.apiTitle); 
+    console.log(this.apiTitle);
+
   } 
-  async getForms():Promise<any>{
-    console.log(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken)
+
+ 
+
+  async apiCall(){
+
     try{
-      const data = await lastValueFrom(this.http.get<any>(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken))
-      const test = data.forms[0];
-      //console.log(test)
-      return test;
-    } catch (error){
-      console.log("error")
+    const data:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken); 
+    console.log(data)
+    console.log(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken)
+    const referral:any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}')
+    console.log(referral)
+    // const authForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken)
+    // console.log(authForm)
+    try {
+      let ticks = 1000
+      let authForm: any = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
+        }, ticks); // 25000 milliseconds = 25 seconds
+      });
+      while (authForm.authorizations[0].status == "pending"){
+        ticks += 5000
+          authForm = await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
+          }, ticks); // 25000 milliseconds = 25 seconds
+        });
+      }
+      //Code to handle successful response
+      console.log(authForm);
+    } catch (error) {
+      // Code to handle error
+      console.error(error);
+    }
+    //console.log(authForm.status)
+    
+  } catch (error){
+      console.log("Error")
     }
   }
 }
