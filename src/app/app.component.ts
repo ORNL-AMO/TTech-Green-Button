@@ -8,12 +8,7 @@ import { OnInit } from '@angular/core';
 import{ Constants } from './config/constants';
 import { ApiHttpService } from './api.service';
 import { HttpClient } from '@angular/common/http'; 
-import { constants } from 'node:buffer';
-import { stringify } from 'node:querystring';
-import { parse } from 'node:path';
-import { count } from 'node:console';
-import { SourceTextModule } from 'node:vm';
-import { lastValueFrom, takeUntil } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
@@ -42,8 +37,7 @@ export class AppComponent implements OnInit{
   getKey(val:String){
     this.authKey = val;
     //alert("Your Key is " + this.authKey);
-    console.log('from key'+this.uid)
-    console.log(this.authMeters)
+
     
     
   }
@@ -66,9 +60,6 @@ export class AppComponent implements OnInit{
     console.log( this.exportServ.exportExcel())
   }
 
-  returnForm: any
-  uid!: String
-  authMeters: any
 
   ngOnInit() { 
     console.log(this.apiTitle);
@@ -116,30 +107,5 @@ export class AppComponent implements OnInit{
 
 
   }
-  // async apiWait(endPoint:string){
-  //   try {
-  //     let ticks = 1000
-  //     let returnVal: any = await new Promise((resolve) => {
-  //       setTimeout(() => {
-  //         resolve(this.apiServ.get(endPoint));
-  //       }, ticks); // 25000 milliseconds = 25 seconds
-  //     });
-  //     while (returnVal.authorizations[0].status == "pending"){
-  //       ticks += 5000
-  //         returnVal = await new Promise((resolve) => {
-  //         setTimeout(() => {
-  //           resolve(this.apiServ.get(endPoint));
-  //         }, ticks); // 25000 milliseconds = 25 seconds
-  //       });
-  //     }
-  //     // Code to handle successful response
-  //     console.log(returnVal);
-  //   } catch (error) {
-  //     // Code to handle error
-  //     console.error(error);
-  //   }
-  //   //console.log(authForm.status)
-  // }
-
 
 }
