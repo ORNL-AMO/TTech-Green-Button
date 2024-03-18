@@ -8,9 +8,9 @@
               <div class="row col-8">
                 <label class="form-label text-light" for="inputKeyBox">Loading Data:</label>
               </div>
-              <input id="inputKeyBox" type="text" class="form-control" #authKey (keyup.enter)="getKey(authKey.value)" placeholder="Key">
+              <input id="inputKeyBox" type="text" class="form-control" #authKey (click)="apiCall()" placeholder="Key">
               <div class="row col-1">
-                <app-logo-button class="offset-3 mt-3" (click)="getKey(authKey.value)"></app-logo-button>
+                <app-logo-button class="offset-3 mt-3" (click)="apiCall()"></app-logo-button>
               </div>
             </form>
           </div>
