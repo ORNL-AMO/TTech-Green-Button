@@ -3,9 +3,9 @@ import X2JS from 'x2js';
 
 //Used for converting JSON to TS Objects
 export interface Root {
-  uid: string
-  meter_uid: string
-  authorization_uid: string
+  uid: number
+  meter_uid: number
+  authorization_uid: number
   created: string
   updated: string
   utility: string
@@ -17,7 +17,7 @@ export interface Root {
 }
 
 export interface Base {
-  service_identifier: string
+  service_identifier: number
   service_tariff: string
   service_class: string
   service_address: string
@@ -225,6 +225,12 @@ export class ParseService {
     console.log(line_items);
     console.log(tiers);
 
+
+    metersutilitiesSheet.addRow({
+      "Meter Number (unique)": root.meter_uid,
+      "Meter Name (Display)": base.meter_numbers[0],
+      "Collection Unit": base.bill_total_unit
+    })
 
 
 
