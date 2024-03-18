@@ -4,8 +4,8 @@
       <form>
           <div class="row col-6">
             <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
-            <input id="inputKeyBox" type="text" class="form-control" #authKey (keyup.enter)="getKey(authKey.value)" placeholder="Key">
-            <app-logo-button class="offset-3 mt-3" (click)="getKey(authKey.value)"></app-logo-button>
+            <input id="inputKeyBox" type="text" class="form-control" #authKey (click)="apiCall()" placeholder="Key">
+            <app-logo-button class="offset-3 mt-3" (click)="apiCall()"></app-logo-button>
           </div>
       </form>
       <form id="inputFile">
@@ -24,10 +24,7 @@
         </div></div>
         
         
-        <div>
-
-          <button apiTest type="button" (click)="apiCall()">Api Test</button>
-        </div>
+        
                 
             
 

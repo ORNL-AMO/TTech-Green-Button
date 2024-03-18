@@ -28,6 +28,7 @@ export class AppComponent implements OnInit{
   accessToken:String ='access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization key for the account that we are using for testing. Change this code to use a different account 
   formUid:any
   referralId:any
+  authForm: any;
 
 
   constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
@@ -93,7 +94,7 @@ export class AppComponent implements OnInit{
           }, ticks); // 25000 milliseconds = 25 seconds
         });
       }
-      // Code to handle successful response
+      //Code to handle successful response
       console.log(authForm);
     } catch (error) {
       // Code to handle error
@@ -104,8 +105,5 @@ export class AppComponent implements OnInit{
   } catch (error){
       console.log("Error")
     }
-
-
   }
-
 }
