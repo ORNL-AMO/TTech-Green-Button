@@ -233,9 +233,10 @@ export class ParseService {
     })
 
     electricitySheet.addRow({
-      "Meter Number (unique)": root.meter_uid,
-      "Meter Name (Display)": base.meter_numbers[0],
-      "Collection Unit": base.bill_total_unit
+      "Meter Number": root.meter_uid,
+      "Read Date": base.bill_end_date,
+      "Total Consumption": base.bill_total_kwh,
+      "Total Cost": base.bill_total_cost
     })
 
 
