@@ -38,13 +38,6 @@ export class AppComponent implements OnInit{
 
 
   }
-  getKey(val:String){
-    this.authKey = val;
-    //alert("Your Key is " + this.authKey);
-
-    
-    
-  }
 
   onChange(event: any) {
     console.log(event);
