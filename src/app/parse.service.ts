@@ -232,6 +232,12 @@ export class ParseService {
       "Collection Unit": base.bill_total_unit
     })
 
+    electricitySheet.addRow({
+      "Meter Number (unique)": root.meter_uid,
+      "Meter Name (Display)": base.meter_numbers[0],
+      "Collection Unit": base.bill_total_unit
+    })
+
 
 
     workbook.xlsx.writeBuffer()
