@@ -6,7 +6,7 @@
           <div class="d-flex justify content-center align-items-top vh-10">
             <form>
               <div class="row col-8">
-                <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
+                <label class="form-label text-light" for="inputKeyBox">Loading Data:</label>
               </div>
               <input id="inputKeyBox" type="text" class="form-control" #authKey (keyup.enter)="getKey(authKey.value)" placeholder="Key">
               <div class="row col-1">
@@ -35,7 +35,6 @@
           </div>
         </div>
         <div class="right-section" [innerHTML]="displayFile" style="white-space: pre;">
-
         </div>
       </div>
     </div>
