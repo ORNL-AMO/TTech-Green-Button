@@ -1,39 +1,47 @@
 <main class="main">
-  <div class="content" >
+  <div class="content">
     <div class="col-10 offset-1">
-      <form>
-          <div class="row col-6">
-            <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
-            <input id="inputKeyBox" type="text" class="form-control" #authKey (click)="apiCall()" placeholder="Key">
-            <app-logo-button class="offset-3 mt-3" (click)="apiCall()"></app-logo-button>
+      <div class="container">
+        <div class="left-section">
+          <div class="d-flex justify content-center align-items-top vh-10">
+            <form>
+              <div class="row col-8">
+                <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
+              </div>
+              <input id="inputKeyBox" type="text" class="form-control" #authKey (click)="apiCall()" placeholder="Key">
+              <div class="row col-1">
+                <app-logo-button class="offset-3 mt-3" (click)="apiCall()"></app-logo-button>
+              </div>
+            </form>
           </div>
-      </form>
-      <form id="inputFile">
-        <div class="row col-6">
-          <div class="d-grid col-6">
-            <label class="btn btn-primary btn-lg" for="dataFile">Import</label>
-            <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
-          </div>
-        <div ngbDropdown class="d-grid col-6">
-          <button type="button" class="btn btn-primary btn-lg" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown</button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <div class="d-grid">
-          <button ngbDropdownItem type="button" (click)="export()">Export As XLSX</button>
-          <button ngbDropdownItem>Another Action</button>
-          <button ngbDropdownItem>Something else is here</button>
-        </div></div>
-        
-        
-        
-                
-            
-
+          <div class="container">
+            <form id="inputFile">
+              <div class="row">
+                <div class="import-button">
+                  <label class="btn btn-primary btn-lg" for="dataFile" style="width: 160px;">Import Data</label>
+                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
+                </div>
+                <div ngbDropdown class="export-button">
+                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;" ngbDropdownToggle>Export Data</button>
+                  <div ngbDropdownMenu aria-labelledby="exportDropdown">
+                    <div class="d-grid">
+                      <button ngbDropdownItem type="button" (click)="exportAsExcel()">Export as XLSX</button>
+                      <button ngbDropdownItem type="button" (click)="exportAsJson()">Export as JSON</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-      </form>
+        <div class="right-section" [innerHTML]="displayFile" style="white-space: pre;">
+
+        </div>
+      </div>
     </div>
   </div>
 </main>
+
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
@@ -45,3 +53,5 @@
 
 
 <router-outlet></router-outlet>
+
+<!-- <div class="d-flex justify content-center align-items-center vh-100"></div> -->
