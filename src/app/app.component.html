@@ -34,8 +34,9 @@
             </form>
           </div>
         </div>
-        <div class="right-section" [innerHTML]="displayFile" style="white-space: pre;">
-
+        <div class="right-section"  style="white-space: pre;">
+          <div style="max-height:300px; overflow-y:auto;" [innerHTML]="displayFile">
+          </div>
         </div>
       </div>
     </div>

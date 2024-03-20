@@ -30,13 +30,11 @@ export class AppComponent implements OnInit{
   accessToken:String ='access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization key for the account that we are using for testing. Change this code to use a different account 
   formUid:any
   referralId:any
-  authForm: any;
+  //authForm: any;
 
 
   constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
     console.log(Constants.API_ENDPOINT); 
-
-
   }
 
   onChange(event: any) {
@@ -47,12 +45,14 @@ export class AppComponent implements OnInit{
       console.log("File recieved");
     const reader = new FileReader();
     reader.onload =()=>{
-      this.fileText = reader.result as String;
+      this.fileText = JSON.parse(reader.result as string);
+      this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Import Data</h3></div><div class="card-body scroll-Container"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
+      console.log(this.displayFile)
       let jdata: string = JSON.parse(reader.result as string);
       console.log(jdata);
       ParseService.convertJSONToXML(jdata);
       ParseService.convertJSONToExcel(jdata);
-      console.log(this.fileText)
+
     }
     reader.readAsText(this.file);
     }
@@ -66,7 +66,6 @@ export class AppComponent implements OnInit{
     // this.getForms().then( data =>{
     //   this.exportServ.exportJSON(data);
     // });
-
   }
 
 
@@ -74,9 +73,6 @@ export class AppComponent implements OnInit{
     console.log(this.apiTitle);
 
   } 
-
- 
-
   async apiCall(){
 
     try{
@@ -89,7 +85,7 @@ export class AppComponent implements OnInit{
     // console.log(authForm)
     try {
       let ticks = 1000
-      let authForm: any = await new Promise((resolve) => {
+      var authForm: any = await new Promise((resolve) => {
         setTimeout(() => {
           resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
         }, ticks); // 25000 milliseconds = 25 seconds
