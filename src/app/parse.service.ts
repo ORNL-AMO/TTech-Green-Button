@@ -1,57 +1,6 @@
 import * as ExcelJS from 'exceljs';
 import X2JS from 'x2js';
 
-//Used for converting JSON to TS Objects
-export interface Root {
-  uid: number
-  meter_uid: number
-  authorization_uid: number
-  created: string
-  updated: string
-  utility: string
-  blocks: string[]
-  base: Base
-  sources: Source[]
-  line_items: LineItem[]
-  tiers: Tier[]
-}
-
-export interface Base {
-  service_identifier: number
-  service_tariff: string
-  service_class: string
-  service_address: string
-  meter_numbers: string[]
-  billing_contact: string
-  billing_address: string
-  billing_account: string
-  bill_start_date: string
-  bill_end_date: string
-  bill_total_kwh: number
-  bill_total_unit: string
-  bill_total_volume: number
-  bill_total_cost: number
-}
-
-export interface Source {
-  type: string
-  raw_url: string
-}
-
-export interface LineItem {
-
-}
-
-export interface Tier {
-  name: string
-  level: number
-  cost: number
-  volume: number
-  unit: string
-}
-
-
-
 export class ParseService {
   constructor() { }
 
@@ -211,32 +160,25 @@ export class ParseService {
       { header: 'Date', key: "Date", width: 20 }
     ];
 
-    //Assign parts of the jsonData object to different TS objects
-    let root: Root = jsonData;
-    let base: Base = root.base;
-    let sources: Source[] = root.sources;
-    let line_items: LineItem[] = root.line_items
-    let tiers: Tier[] = root.tiers;
-
     //Test the above objects
-    console.log(root);
-    console.log(base);
-    console.log(sources);
-    console.log(line_items);
-    console.log(tiers);
+    console.log(jsonData);
+    console.log(jsonData.base);
+    console.log(jsonData.sources);
+    console.log(jsonData.line_items);
+    console.log(jsonData.tiers);
 
 
     metersutilitiesSheet.addRow({
-      "Meter Number (unique)": root.meter_uid,
-      "Meter Name (Display)": base.meter_numbers[0],
-      "Collection Unit": base.bill_total_unit
+      "Meter Number (unique)": jsonData.meter_uid,
+      "Meter Name (Display)": jsonData.base.meter_numbers[0],
+      "Collection Unit": jsonData.base.bill_total_unit
     })
 
     electricitySheet.addRow({
-      "Meter Number": root.meter_uid,
-      "Read Date": base.bill_end_date,
-      "Total Consumption": base.bill_total_kwh,
-      "Total Cost": base.bill_total_cost
+      "Meter Number": jsonData.meter_uid,
+      "Read Date": jsonData.base.bill_end_date,
+      "Total Consumption": jsonData.base.bill_total_kwh,
+      "Total Cost": jsonData.base.bill_total_cost
     })
 
 
@@ -264,5 +206,9 @@ export class ParseService {
       .catch((error: any) => {
         console.error("Error exporting Excel file:", error);
       });
+  }
+
+  static validateIncomingData(jsonData: any) {
+
   }
 }
