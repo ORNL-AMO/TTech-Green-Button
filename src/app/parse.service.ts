@@ -167,6 +167,14 @@ export class ParseService {
     console.log(jsonData.line_items);
     console.log(jsonData.tiers);
 
+    facilitiesSheet.addRow({
+      "Facility Name": jsonData.base.billing_contact,
+      "Address": jsonData.base.service_address.split(",")[0],
+      "Country": "US",
+      "City": jsonData.base.service_address.split(",")[1],
+      "State": jsonData.base.service_address.split(",")[2].substring(0, 3),
+
+    })
 
     metersutilitiesSheet.addRow({
       "Meter Number (unique)": jsonData.meter_uid,
@@ -178,7 +186,13 @@ export class ParseService {
       "Meter Number": jsonData.meter_uid,
       "Read Date": jsonData.base.bill_end_date,
       "Total Consumption": jsonData.base.bill_total_kwh,
-      "Total Cost": jsonData.base.bill_total_cost
+      "Total Cost": jsonData.base.bill_total_cost,
+      "Total Consuption": jsonData.base.bill_total_kwh
+    })
+
+    predictorsSheet.addRow({
+      "Facility Name": jsonData.base.billing_contact,
+      "Date": jsonData.base.bill_end_date
     })
 
 
