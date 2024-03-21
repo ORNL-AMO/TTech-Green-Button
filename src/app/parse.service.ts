@@ -18,7 +18,7 @@ export class ParseService {
     console.log(xmlData);
   }
 
-  static convertJSONToExcel(jsonData: any) {
+  static convertJSONToExcel(billingData: any) {
     //Create a workbook
     const workbook = new ExcelJS.Workbook();
 
@@ -161,38 +161,38 @@ export class ParseService {
     ];
 
     //Test the above objects
-    console.log(jsonData);
-    console.log(jsonData.base);
-    console.log(jsonData.sources);
-    console.log(jsonData.line_items);
-    console.log(jsonData.tiers);
+    console.log(billingData);
+    console.log(billingData.base);
+    console.log(billingData.sources);
+    console.log(billingData.line_items);
+    console.log(billingData.tiers);
 
     facilitiesSheet.addRow({
-      "Facility Name": jsonData.base.billing_contact,
-      "Address": jsonData.base.service_address.split(",")[0],
+      "Facility Name": billingData.base.billing_contact,
+      "Address": billingData.base.service_address.split(",")[0],
       "Country": "US",
-      "City": jsonData.base.service_address.split(",")[1],
-      "State": jsonData.base.service_address.split(",")[2].substring(0, 3),
+      "City": billingData.base.service_address.split(",")[1],
+      "State": billingData.base.service_address.split(",")[2].substring(0, 3),
 
     })
 
     metersutilitiesSheet.addRow({
-      "Meter Number (unique)": jsonData.meter_uid,
-      "Meter Name (Display)": jsonData.base.meter_numbers[0],
-      "Collection Unit": jsonData.base.bill_total_unit
+      "Meter Number (unique)": billingData.meter_uid,
+      "Meter Name (Display)": billingData.base.meter_numbers[0],
+      "Collection Unit": billingData.base.bill_total_unit
     })
 
     electricitySheet.addRow({
-      "Meter Number": jsonData.meter_uid,
-      "Read Date": jsonData.base.bill_end_date,
-      "Total Consumption": jsonData.base.bill_total_kwh,
-      "Total Cost": jsonData.base.bill_total_cost,
-      "Total Consuption": jsonData.base.bill_total_kwh
+      "Meter Number": billingData.meter_uid,
+      "Read Date": billingData.base.bill_end_date,
+      "Total Consumption": billingData.base.bill_total_kwh,
+      "Total Cost": billingData.base.bill_total_cost,
+      "Total Consuption": billingData.base.bill_total_kwh
     })
 
     predictorsSheet.addRow({
-      "Facility Name": jsonData.base.billing_contact,
-      "Date": jsonData.base.bill_end_date
+      "Facility Name": billingData.base.billing_contact,
+      "Date": billingData.base.bill_end_date
     })
 
 
