@@ -107,31 +107,10 @@ export class AppComponent implements OnInit{
     //   }, 1000); // 25000 milliseconds = 25 seconds
     // });
 
-    // try {
-    //   let ticks = 1000
-    //   let authForm: any = await new Promise((resolve) => {
-    //     setTimeout(() => {
-    //       resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
-    //     }, ticks); // 25000 milliseconds = 25 seconds
-    //   });
-    //   while (authForm.authorizations[0].status == "pending"){
-    //     ticks += 5000
-    //       authForm = await new Promise((resolve) => {
-    //       setTimeout(() => {
-    //         resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
-    //       }, ticks); // 25000 milliseconds = 25 seconds
-    //     });
-    //   }
       //Code to handle successful response
       console.log(authForm);
       console.log(meterForm);
-      console.log(billsForm);
-    // } catch (error) {
-    //   // Code to handle error
-    //   console.error(error);
-    // }
-    //console.log(authForm.status)
-    
+      console.log(billsForm);    
   } catch (error){
       console.log("Error")
     }
