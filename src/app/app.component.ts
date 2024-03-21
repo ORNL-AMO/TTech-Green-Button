@@ -10,6 +10,7 @@ import { ApiHttpService } from './api.service';
 import { HttpClient } from '@angular/common/http'; 
 import { lastValueFrom } from 'rxjs';
 import { ParseService} from './parse.service';
+import internal from 'node:stream';
 
 @Component({
   selector: 'app-root',
@@ -71,13 +72,12 @@ export class AppComponent implements OnInit{
 
 
   ngOnInit() { 
-    console.log(this.apiTitle);
-
   } 
 
  
 
-  async apiCall(){
+  async apiCall(key:string){
+    console.log(key)
 
     try{
     const data:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken); 
@@ -85,31 +85,32 @@ export class AppComponent implements OnInit{
     console.log(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken)
     const referral:any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}')
     console.log(referral)
+    const authForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + key +'?referrals=' + referral.referral + '&' + this.accessToken)
+    const meterForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?' + this.accessToken)
+    const billsForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + key + '&' +  this.accessToken)
+
     // const authForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken)
     // console.log(authForm)
-    try {
-      let ticks = 1000
-      let authForm: any = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
-        }, ticks); // 25000 milliseconds = 25 seconds
-      });
-      while (authForm.authorizations[0].status == "pending"){
-        ticks += 5000
-          authForm = await new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
-          }, ticks); // 25000 milliseconds = 25 seconds
-        });
-      }
+    // let authForm: any = await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/436742?referrals=' + referral.referral + '&' + this.accessToken));
+    //   }, 1000); // 25000 milliseconds = 25 seconds
+    // });
+    // let meterForm: any = await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?' + this.accessToken));
+    //   }, 1000); // 25000 milliseconds = 25 seconds
+    // });
+    // let billsForm: any = await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?' +  + '&' +  this.accessToken)); // authorizations part needs to be created as a variable that is pulled from authForm authorization_uid
+    //   }, 1000); // 25000 milliseconds = 25 seconds
+    // });
+
       //Code to handle successful response
       console.log(authForm);
-    } catch (error) {
-      // Code to handle error
-      console.error(error);
-    }
-    //console.log(authForm.status)
-    
+      console.log(meterForm);
+      console.log(billsForm);    
   } catch (error){
       console.log("Error")
     }
