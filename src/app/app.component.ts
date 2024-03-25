@@ -167,8 +167,6 @@ export class AppComponent implements OnInit {
     if (files.length == 2) {
       console.log("Both files received");
 
-      // Resetting data variables to ensure fresh assignment
-
       Array.from(files).forEach((file: any) => {
         const reader = new FileReader();
 
@@ -176,40 +174,50 @@ export class AppComponent implements OnInit {
           const fileText = reader.result as string;
           const jsonData = JSON.parse(fileText);
 
-          console.log(file);
-
+          // Distinguish the files by their content
           try {
-            // Distinguishing the files by their content
+            //Detects if there is a JSON file containing meter data
             if (jsonData?.meters !== undefined) {
               console.log("Meter data identified");
+
               // Directly storing the parsed JSON in the meterData variable
               this.importedmeterData = jsonData;
+
+              //Converting the JSON to XML
               ParseService.convertJSONToXML(this.importedmeterData);
             }
+
+            //Detects if there is a JSON file containing billing data
             else if (jsonData?.base !== undefined && 'bill_start_date' in jsonData?.base) {
               console.log("Billing data identified");
+
               // Directly storing the parsed JSON in the billingData variable
               this.importedbillingData = jsonData;
+
+              //Converts the JSON to XML
               ParseService.convertJSONToXML(this.importedbillingData);
             }
+
+            // If the file contains data we do not expect (non-billing or meter data), log an error
             else {
               console.error("Unknown file type");
             }
+
+            ParseService.convertJSONToExcel(this.importedbillingData, this.importedmeterData);
           }
           catch (e) {
             console.log(e);
           }
-
-          // Optionally, perform additional operations or calls here
-          // after both files are processed
         };
 
         reader.readAsText(file);
       });
     }
+
+    else {
+      console.log("Exactly two files were expected, but 0, 1, or 3+ were received");
+    }
   }
-
-
 
   exportAsExcel() {
     console.log(this.exportServ.exportExcel(this.fileText))
@@ -222,11 +230,8 @@ export class AppComponent implements OnInit {
 
   }
 
-
   ngOnInit() {
   }
-
-
 
   async apiCall(key: string) {
     console.log(key)
