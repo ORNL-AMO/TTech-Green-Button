@@ -35,6 +35,121 @@ export class AppComponent implements OnInit{
   authForm: any;
   meterForm: any;
   billsForm: any;
+  billingData: any = {
+    "uid": "12382",
+    "meter_uid": "58",
+    "authorization_uid": "23",
+    "created": "2015-03-19T20:50:41.206253+00:00",
+    "updated": "2015-03-19T20:50:41.206253+00:00",
+    "utility": "DEMO",
+    "blocks": [
+        "base",
+        "sources",
+        "line_items",
+        "tiers"
+    ],
+    "base": {
+        "service_identifier": "1234567890",
+        "service_tariff": "E1 XB Residential Service",
+        "service_class": "res-electric",
+        "service_address": "123 Main St #100, Anytown, CA 94612",
+        "meter_numbers": [
+            "A987654321"
+        ],
+        "billing_contact": "ACME, INC.",
+        "billing_address": "123 Main St #100, Anytown, CA 94612",
+        "billing_account": "100-200-33333",
+        "bill_start_date": "2015-01-07T00:00:00.000000-08:00",
+        "bill_end_date": "2015-02-05T00:00:00.000000-08:00",
+        "bill_total_kwh": 837.0,
+        "bill_total_unit": "kwh",
+        "bill_total_volume": 837.0,
+        "bill_total_cost": 194.78
+    },
+    "sources": [
+        {
+            "type": "pdf",
+            "raw_url": "https://utilityapi.com/api/v2/files/abc123abc123abc123"
+        }
+    ],
+    "line_items": [
+        {
+            "cost": 52.88,
+            "end": "2015-02-05T08:00:00.000000+00:00",
+            "name": "Tier 1 Usage",
+            "rate": 0.1617,
+            "start": "2015-01-07T08:00:00.000000+00:00",
+            "unit": "kwh",
+            "volume": 327.0
+        },
+        {
+            "cost": 18.14,
+            "end": "2015-02-05T08:00:00.000000+00:00",
+            "name": "Tier 2 Usage",
+            "rate": 0.18491,
+            "start": "2015-01-07T08:00:00.000000+00:00",
+            "unit": "kwh",
+            "volume": 98.1
+        },
+        {
+            "cost": 62.54,
+            "end": "2015-02-05T08:00:00.000000+00:00",
+            "name": "Tier 3 Usage",
+            "rate": 0.27322,
+            "start": "2015-01-07T08:00:00.000000+00:00",
+            "unit": "kwh",
+            "volume": 228.9
+        },
+        {
+            "cost": 60.98,
+            "end": "2015-02-05T08:00:00.000000+00:00",
+            "name": "Tier 4 Usage",
+            "rate": 0.33322,
+            "start": "2015-01-07T08:00:00.000000+00:00",
+            "unit": "kwh",
+            "volume": 183.0
+        },
+        {
+            "cost": 0.24,
+            "end": "2015-02-05T08:00:00.000000+00:00",
+            "name": "Energy Commission Tax",
+            "rate": null,
+            "start": "2015-01-07T08:00:00.000000+00:00",
+            "unit": null,
+            "volume": null
+        }
+    ],
+    "tiers": [
+        {
+            "name": "Tier 1 Usage",
+            "level": 1,
+            "cost": 52.88,
+            "volume": 327.0,
+            "unit": "kwh"
+        },
+        {
+            "name": "Tier 2 Usage",
+            "level": 2,
+            "cost": 18.14,
+            "volume": 98.1,
+            "unit": "kwh"
+        },
+        {
+            "name": "Tier 3 Usage",
+            "level": 3,
+            "cost": 62.54,
+            "volume": 228.9,
+            "unit": "kwh"
+        },
+        {
+            "name": "Tier 4 Usage",
+            "level": 4,
+            "cost": 60.98,
+            "volume": 183.0,
+            "unit": "kwh"
+        }
+    ]
+}
 
 
   constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
@@ -81,7 +196,8 @@ export class AppComponent implements OnInit{
 
   async apiCall(key:string){
     console.log(key)
-
+    //437638
+    
     try{
     const data:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken); 
     console.log(data)
@@ -96,10 +212,10 @@ export class AppComponent implements OnInit{
       console.log(this.authForm);
       console.log(this.meterForm);
       console.log(this.billsForm);    
-      ParseService.convertJSONToExcel(this.billsForm)
-      this.exportServ.exportJSON(this.authForm)
-      this.exportServ.exportJSON(this.meterForm)
-      this.exportServ.exportJSON(this.billsForm)
+      ParseService.convertJSONToExcel(this.billingData, this.meterForm)
+      // this.exportServ.exportJSON(this.authForm)
+      // this.exportServ.exportJSON(this.meterForm)
+      // this.exportServ.exportJSON(this.billsForm)
 
   } catch (error){
       console.log(error)

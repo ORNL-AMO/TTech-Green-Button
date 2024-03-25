@@ -18,7 +18,7 @@ export class ParseService {
     console.log(xmlData);
   }
 
-  static convertJSONToExcel(billingData: any) {
+  static convertJSONToExcel(billingData: any, meterData:any) {
     //Create a workbook
     const workbook = new ExcelJS.Workbook();
 
