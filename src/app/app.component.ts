@@ -202,14 +202,14 @@ export class AppComponent implements OnInit{
     const data:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken); 
     console.log(data)
     console.log(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken)
-    const referral:any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}')
-    console.log(referral)
-    this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + key +'?referrals=' + referral.referral + '&' + this.accessToken)
-    this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?' + this.accessToken)
+    //const referral:any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}')
+    //console.log(referral)
+    //this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + key +'?referrals=' + referral.referral + '&' + this.accessToken)
+    this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?authorizations='+ key + '&' + this.accessToken)
     this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + key + '&' +  this.accessToken)
 
       //Code to handle successful response
-      console.log(this.authForm);
+      //console.log(this.authForm);
       console.log(this.meterForm);
       console.log(this.billsForm);    
       ParseService.convertJSONToExcel(this.billingData, this.meterForm)
