@@ -219,11 +219,11 @@ export class ParseService {
     let tiers: Tier[] = root.tiers;
 
     //Test the above objects
-    console.log(root);
-    console.log(base);
-    console.log(sources);
-    console.log(line_items);
-    console.log(tiers);
+    // console.log(root);
+    // console.log(base);
+    // console.log(sources);
+    // console.log(line_items);
+    // console.log(tiers);
 
 
     metersutilitiesSheet.addRow({

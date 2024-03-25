@@ -12,6 +12,7 @@ import { lastValueFrom } from 'rxjs';
 import { ParseService} from './parse.service';
 import internal from 'node:stream';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -29,9 +30,11 @@ export class AppComponent implements OnInit{
   displayFile!:String;
   authKey:String = '';
   accessToken:String ='access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization key for the account that we are using for testing. Change this code to use a different account 
-  formUid:any
-  referralId:any
+  formUid:any;
+  referralId:any;
   authForm: any;
+  meterForm: any;
+  billsForm: any;
 
 
   constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
@@ -52,7 +55,7 @@ export class AppComponent implements OnInit{
       let jdata: string = JSON.parse(reader.result as string);
       console.log(jdata);
       ParseService.convertJSONToXML(jdata);
-      ParseService.convertJSONToExcel(jdata);
+      //ParseService.convertJSONToExcel(jdata);
       console.log(this.fileText)
     }
     reader.readAsText(this.file);
@@ -85,34 +88,21 @@ export class AppComponent implements OnInit{
     console.log(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken)
     const referral:any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' +data.forms[0].uid+'/test-submit?' + this.accessToken,'{"utility": "DEMO", "scenario": "residential"}')
     console.log(referral)
-    const authForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + key +'?referrals=' + referral.referral + '&' + this.accessToken)
-    const meterForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?' + this.accessToken)
-    const billsForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + key + '&' +  this.accessToken)
-
-    // const authForm:any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations?referrals='+referral.referral+'&include=meters&' + this.accessToken)
-    // console.log(authForm)
-    // let authForm: any = await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/436742?referrals=' + referral.referral + '&' + this.accessToken));
-    //   }, 1000); // 25000 milliseconds = 25 seconds
-    // });
-    // let meterForm: any = await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?' + this.accessToken));
-    //   }, 1000); // 25000 milliseconds = 25 seconds
-    // });
-    // let billsForm: any = await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?' +  + '&' +  this.accessToken)); // authorizations part needs to be created as a variable that is pulled from authForm authorization_uid
-    //   }, 1000); // 25000 milliseconds = 25 seconds
-    // });
+    this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + key +'?referrals=' + referral.referral + '&' + this.accessToken)
+    this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?' + this.accessToken)
+    this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + key + '&' +  this.accessToken)
 
       //Code to handle successful response
-      console.log(authForm);
-      console.log(meterForm);
-      console.log(billsForm);    
+      console.log(this.authForm);
+      console.log(this.meterForm);
+      console.log(this.billsForm);    
+      ParseService.convertJSONToExcel(this.billsForm)
+      this.exportServ.exportJSON(this.authForm)
+      this.exportServ.exportJSON(this.meterForm)
+      this.exportServ.exportJSON(this.billsForm)
+
   } catch (error){
-      console.log("Error")
+      console.log(error)
     }
   }
 }
