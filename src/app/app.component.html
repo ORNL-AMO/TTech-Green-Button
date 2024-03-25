@@ -8,7 +8,8 @@
               <div class="row col-8">
                 <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
               </div>
-              <input id="inputKeyBox" type="number" class="form-control" #authKey (keyup.enter)="apiCall(authKey.value)" placeholder="Key">
+              <input id="inputKeyBox" type="number" class="form-control" #authKey (keyup.enter)="apiCall(authKey.value)"
+                placeholder="Key">
               <div class="row col-1">
                 <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value)"></app-logo-button>
               </div>
@@ -19,10 +20,12 @@
               <div class="row">
                 <div class="import-button">
                   <label class="btn btn-primary btn-lg" for="dataFile" style="width: 160px;">Import Data</label>
-                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
+                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)"
+                    multiple>
                 </div>
                 <div ngbDropdown class="export-button">
-                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;" ngbDropdownToggle>Export Data</button>
+                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;"
+                    ngbDropdownToggle>Export Data</button>
                   <div ngbDropdownMenu aria-labelledby="exportDropdown">
                     <div class="d-grid">
                       <button ngbDropdownItem type="button" (click)="exportAsExcel()">Export as XLSX</button>
