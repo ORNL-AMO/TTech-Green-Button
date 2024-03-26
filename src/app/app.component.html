@@ -6,7 +6,7 @@
           <div class="d-flex justify content-center align-items-top vh-10">
             <form>
               <div class="row col-8">
-                <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
+                <label class="form-label text-light" for="inputKeyBox">Loading Data:</label>
               </div>
               <input id="inputKeyBox" type="text" class="form-control" #authKey (click)="apiCall()" placeholder="Key">
               <div class="row col-1">
@@ -19,7 +19,7 @@
               <div class="row">
                 <div class="import-button">
                   <label class="btn btn-primary btn-lg" for="dataFile" style="width: 160px;">Import Data</label>
-                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
+                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)" multiple>
                 </div>
                 <div ngbDropdown class="export-button">
                   <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;" ngbDropdownToggle>Export Data</button>
@@ -35,7 +35,8 @@
           </div>
         </div>
         <div class="right-section"  style="white-space: pre;">
-          <div style="max-height:300px; overflow-y:auto;" [innerHTML]="displayFile">
+          <div style="max-height: 300px; overflow-y: auto;" [innerHTML]="displayFile">
+
           </div>
         </div>
       </div>

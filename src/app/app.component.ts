@@ -46,7 +46,7 @@ export class AppComponent implements OnInit{
     const reader = new FileReader();
     reader.onload =()=>{
       this.fileText = JSON.parse(reader.result as string);
-      this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Import Data</h3></div><div class="card-body scroll-Container"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
+      this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Import Data</h3></div><div class="card-body"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
       console.log(this.displayFile)
       let jdata: string = JSON.parse(reader.result as string);
       console.log(jdata);
