@@ -4,7 +4,7 @@ import X2JS from 'x2js';
 export class ParseService {
   constructor() { }
 
-  static convertJSONToXML(jsonData: any) {
+  static convertJSONToXML(jsonData: any, meterData: any) {
     //Create new instance of X2JS
     let x2js: X2JS = new X2JS();
 
@@ -173,12 +173,14 @@ export class ParseService {
       "Country": "US",
       "City": billingData.base.service_address.split(",")[1],
       "State": billingData.base.service_address.split(",")[2].substring(0, 3),
+      "Contact Name": billingData.base.billing_contact,
 
     })
 
     metersutilitiesSheet.addRow({
-      "Meter Number (unique)": billingData.meter_uid,
-      "Meter Name (Display)": billingData.base.meter_numbers[0],
+      "Meter Number (unique)": meterData.meters[0].uid,
+      "Source": meterData.meters[0].base.service_class,
+      "Meter Name (Display)": meterData.meters[0].base.service_tariff,
       "Collection Unit": billingData.base.bill_total_unit
     })
 

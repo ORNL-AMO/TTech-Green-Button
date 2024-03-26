@@ -162,14 +162,14 @@ export class AppComponent implements OnInit {
     console.log(event);
     this.file = event.target.files[0];
 
-    if (this.file) {
+    if (this.file && this.meterForm) {
       console.log("File recieved");
       const reader = new FileReader();
       reader.onload = () => {
         this.fileText = reader.result as String;
         let jdata: string = JSON.parse(reader.result as string);
         console.log(jdata);
-        ParseService.convertJSONToXML(jdata);
+        ParseService.convertJSONToXML(jdata, this.meterForm);
         //ParseService.convertJSONToExcel(jdata);
         console.log(this.fileText)
       }
@@ -213,6 +213,7 @@ export class AppComponent implements OnInit {
       console.log(this.meterForm);
       console.log(this.billsForm);
       ParseService.convertJSONToExcel(this.billingData, this.meterForm)
+      //this.exportServ.exportJSON(this.billsForm);
 
     } catch (error) {
       console.log(error)
