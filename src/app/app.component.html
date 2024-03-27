@@ -6,11 +6,14 @@
           <div class="d-flex justify content-center align-items-top vh-10">
             <form>
               <div class="row col-8">
-                <label class="form-label text-light" for="inputKeyBox">Loading Data:</label>
+                <label class="form-label text-light" for="inputKeyBox">Enter Your Authorization Key:</label>
               </div>
               <input id="inputKeyBox" type="text" class="form-control" #authKey (keyup.enter)="getKey(authKey.value)" placeholder="Key">
               <div class="row col-1">
-                <app-logo-button class="offset-3 mt-3" (click)="getKey(authKey.value)"></app-logo-button>
+                <div *ngIf="!(loader.isLoading$ | async)" class="spinner-overlay" (click)="getForms">
+                  <app-logo-button class="offset-3 mt-3"></app-logo-button>
+               </div>
+
               </div>
             </form>
           </div>
