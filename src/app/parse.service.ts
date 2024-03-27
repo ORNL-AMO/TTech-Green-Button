@@ -1,57 +1,6 @@
 import * as ExcelJS from 'exceljs';
 import X2JS from 'x2js';
 
-//Used for converting JSON to TS Objects
-export interface Root {
-  uid: number
-  meter_uid: number
-  authorization_uid: number
-  created: string
-  updated: string
-  utility: string
-  blocks: string[]
-  base: Base
-  sources: Source[]
-  line_items: LineItem[]
-  tiers: Tier[]
-}
-
-export interface Base {
-  service_identifier: number
-  service_tariff: string
-  service_class: string
-  service_address: string
-  meter_numbers: string[]
-  billing_contact: string
-  billing_address: string
-  billing_account: string
-  bill_start_date: string
-  bill_end_date: string
-  bill_total_kwh: number
-  bill_total_unit: string
-  bill_total_volume: number
-  bill_total_cost: number
-}
-
-export interface Source {
-  type: string
-  raw_url: string
-}
-
-export interface LineItem {
-
-}
-
-export interface Tier {
-  name: string
-  level: number
-  cost: number
-  volume: number
-  unit: string
-}
-
-
-
 export class ParseService {
   constructor() { }
 
@@ -69,7 +18,7 @@ export class ParseService {
     console.log(xmlData);
   }
 
-  static convertJSONToExcel(jsonData: any) {
+  static convertJSONToExcel(billingData: any, meterData:any) {
     //Create a workbook
     const workbook = new ExcelJS.Workbook();
 
@@ -211,34 +160,45 @@ export class ParseService {
       { header: 'Date', key: "Date", width: 20 }
     ];
 
-    //Assign parts of the jsonData object to different TS objects
-    let root: Root = jsonData;
-    let base: Base = root.base;
-    let sources: Source[] = root.sources;
-    let line_items: LineItem[] = root.line_items
-    let tiers: Tier[] = root.tiers;
-
     //Test the above objects
-    console.log(root);
-    console.log(base);
-    console.log(sources);
-    console.log(line_items);
-    console.log(tiers);
+    // console.log(billingData);
+    // console.log(billingData.base);
+    // console.log(billingData.sources);
+    // console.log(billingData.line_items);
+    // console.log(billingData.tiers);
 
+    facilitiesSheet.addRow({
+      "Facility Name": billingData.base.billing_contact,
+      "Address": billingData.base.service_address.split(",")[0],
+      "Country": "US",
+      "City": billingData.base.service_address.split(",")[1],
+      "State": billingData.base.service_address.split(",")[2].substring(0, 3),
+      "Contact Name": billingData.base.billing_contact,
 
-    metersutilitiesSheet.addRow({
-      "Meter Number (unique)": root.meter_uid,
-      "Meter Name (Display)": base.meter_numbers[0],
-      "Collection Unit": base.bill_total_unit
     })
 
     electricitySheet.addRow({
-      "Meter Number (unique)": root.meter_uid,
-      "Meter Name (Display)": base.meter_numbers[0],
-      "Collection Unit": base.bill_total_unit
+      "Meter Number": billingData.meter_uid,
+      "Read Date": billingData.base.bill_end_date,
+      "Total Consumption": billingData.base.bill_total_kwh,
+      "Total Cost": billingData.base.bill_total_cost,
+      "Total Consuption": billingData.base.bill_total_kwh
     })
 
+    predictorsSheet.addRow({
+      "Facility Name": billingData.base.billing_contact,
+      "Date": billingData.base.bill_end_date
+    })
 
+    meterData.meters.forEach((element: any) => {
+      console.log(element.uid);
+      metersutilitiesSheet.addRow({
+        "Meter Number (unique)": element.uid,
+        "Source": element.base.service_class,
+        "Meter Name (Display)": element.base.service_tariff,
+        "Collection Unit": billingData.base.bill_total_unit
+      })
+    });
 
     workbook.xlsx.writeBuffer()
       .then((buffer: BlobPart) => {
@@ -263,5 +223,9 @@ export class ParseService {
       .catch((error: any) => {
         console.error("Error exporting Excel file:", error);
       });
+  }
+
+  static validateIncomingData(jsonData: any) {
+
   }
 }
