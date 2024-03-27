@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { ParseService } from './parse.service';
 import internal from 'node:stream';
+import { end } from '@popperjs/core';
 
 
 @Component({
@@ -30,8 +31,8 @@ export class AppComponent implements OnInit {
   file!: File;
   fileText!: any;
   displayFile!: String;
-  authKey: String = '';
-  accessToken: String = 'access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization key for the account that we are using for testing. Change this code to use a different account
+  authToken: String = '';
+  accessToken: String = 'access_token=3959c8c3f5a44d9cad67534d9910d1b9'; // this is the authorization authToken for the account that we are using for testing. Change this code to use a different account
   formUid: any;
   referralId: any;
   authForm: any;
@@ -233,23 +234,124 @@ export class AppComponent implements OnInit {
   ngOnInit() {
   }
 
-  async apiCall(key: string) {
-    console.log(key)
+async apiNew(){
+  // for new users
+  try {
+    const data: any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken);
+    console.log(data)
+    console.log(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken)
+    const referral: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken, '{"utility": "DEMO", "scenario": "residential"}')
+    console.log(referral)
+    var TestauthForm: any = await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
+      }, 25000); // 25000 milliseconds = 25 seconds
+    });
+    // this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?referrals=' + referral.referral + '&' + this.accessToken + '&include=meters')
+
+    console.log(TestauthForm);
+    console.log(TestauthForm.authorizations[0].meters.meters[0].uid)
+    let meterID = TestauthForm.authorizations[0].meters.meters[0].uid
+    const data1: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'meters/historical-collection?' + this.accessToken, '{"meters": ['+ TestauthForm.authorizations[0].meters.meters[0].uid +']}');
+    //    'https://utilityapi.com/api/v2/meters/historical-collection'
+    console.log(data1);
+    let ticks = 1000
+    var pollMeter: any = await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters/' + meterID + '?' + this.accessToken));
+      }, ticks); // 25000 milliseconds = 25 seconds
+    });
+    while (pollMeter.status == "pending"){
+      ticks += 5000
+        pollMeter = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters/' + meterID + '?' + this.accessToken));
+        }, ticks); // 25000 milliseconds = 25 seconds
+      });
+    }
+    console.log(pollMeter)
+    const data2: any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?meters='+ meterID +'&' + this.accessToken);
+    console.log(data2)
+    // this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + authToken + '?referrals=' + referral.referral + '&' + this.accessToken)
+    // this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?authorizations='+ authToken + '&' + this.accessToken)
+    //this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + authToken + '&' + this.accessToken)
+
+    //Code to handle successful response
+    // console.log(this.authForm);
+    // console.log(this.meterForm);
+    // console.log(this.billsForm);
+    //ParseService.convertJSONToExcel(this.billingData, this.meterForm)
+    //this.exportServ.exportJSON(data2)
+    
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+
+  async apiCall (authToken: string,startDate?:string,endDate?:string) {
+    //for returning users that have their auth token
+    console.log (authToken)
     //437638
 
     try {
-      const data: any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken);
-      console.log(data)
-      console.log(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken)
-      const referral: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken, '{"utility": "DEMO", "scenario": "residential"}')
-      console.log(referral)
-      this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + key + '?referrals=' + referral.referral + '&' + this.accessToken)
-      this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?' + this.accessToken)
-      this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + key + '&' + this.accessToken)
+      
+      var TestauthForm: any = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + authToken + '?include=meters&' + this.accessToken));
+        }, 1000); // 25000 milliseconds = 25 seconds
+      });
+      // this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?referrals=' + referral.referral + '&' + this.accessToken + '&include=meters')
+
+      console.log(TestauthForm);
+      console.log(TestauthForm.meters.meters[0].uid)
+      let meterID = '';
+      TestauthForm.meters.meters.forEach((element:any) => {
+        meterID += '"'+ element.uid +'",'
+      });
+      meterID = meterID.slice(0,-1)
+      console.log(meterID)
+      const data1: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'meters/historical-collection?' + this.accessToken, '{"meters": ['+ meterID +']}');
+      //    'https://utilityapi.com/api/v2/meters/historical-collection'
+      meterID = meterID.replaceAll('"','')
+      console.log(meterID)
+      console.log(data1);
+      let ticks = 1000
+      var pollMeter: any = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters/' + meterID + '?' + this.accessToken));
+        }, ticks); // 25000 milliseconds = 25 seconds
+      });
+      while (pollMeter.status == "pending"){
+        ticks += 5000
+          pollMeter = await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters/' + meterID + '?' + this.accessToken));
+          }, ticks); // 25000 milliseconds = 25 seconds
+        });
+      }
+      console.log(pollMeter)
+      let strDate = ''
+      if(startDate != undefined){
+        strDate = '&start='+ startDate +'&end='
+      } else{
+        strDate = '&start='
+      }
+
+      if(endDate != undefined){
+        strDate += '&end='+ endDate
+      } else{
+        strDate += '&end='
+      }
+      // this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + authToken + '?referrals=' + referral.referral + '&' + this.accessToken)
+      // this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?authorizations='+ authToken + '&' + this.accessToken)
+      //this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + authToken + '&' + this.accessToken)
+      this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?meters='+ meterID + strDate +'&' + this.accessToken); //add dates here start=YYY-MM-DD end=YYY-MM-DD
+
 
       //Code to handle successful response
-      console.log(this.authForm);
-      console.log(this.meterForm);
+      // console.log(this.authForm);
+      // console.log(this.meterForm);
       console.log(this.billsForm);
       ParseService.convertJSONToExcel(this.billingData, this.meterForm)
       //this.exportServ.exportJSON(this.billsForm);
