@@ -238,9 +238,9 @@ async apiNew(){
       // console.log(this.authForm);
       // console.log(this.meterForm);
       console.log(this.billsForm);
-      //ParseService.convertJSONToExcel(this.billingData, this.meterForm)
-      //this.exportServ.exportJSON(data2)
-      
+      ParseService.convertJSONToExcel(this.billingData, this.meterForm)
+      //this.exportServ.exportJSON(this.billsForm);
+
     } catch (error) {
       console.log(error)
     }
