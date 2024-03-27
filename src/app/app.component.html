@@ -8,10 +8,17 @@
               <div class="row col-8">
                 <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
               </div>
-              <input id="inputKeyBox" type="number" class="form-control" #authKey (keyup.enter)="apiCall(authKey.value)"
-                placeholder="Key">
+              <input id="inputKeyBox" type="number" class="form-control" #authKey (keyup.enter)="apiCall(authKey.value)" placeholder="Key">
+              <div class="row col-8 mt-2">
+                <label class="form-label text-light" for="startDate">Start Date:</label>
+              </div>
+              <input id="startDate" class="form-control" #startDate type="date">
+              <div class="row col-8 mt-2">
+                <label class="form-label text-light" for="endDate">End Date:</label>
+              </div>
+              <input id="endDate" class="form-control" #endDate type="date">
               <div class="row col-1">
-                <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value)"></app-logo-button>
+                <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value,startDate.value,endDate.value)"></app-logo-button>
               </div>
             </form>
           </div>
