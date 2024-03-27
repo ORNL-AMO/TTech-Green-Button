@@ -23,6 +23,8 @@ import internal from 'node:stream';
 
 })
 export class AppComponent implements OnInit {
+  importedbillingData: any = null;
+  importedmeterData: any = null;
   apiTitle = Constants.TitleOfSite;
   title = 'World';
   file!: File;
@@ -160,20 +162,60 @@ export class AppComponent implements OnInit {
 
   onChange(event: any) {
     console.log(event);
-    this.file = event.target.files[0];
+    const files = event.target.files;
 
-    if (this.file && this.meterForm) {
-      console.log("File recieved");
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.fileText = reader.result as String;
-        let jdata: string = JSON.parse(reader.result as string);
-        console.log(jdata);
-        ParseService.convertJSONToXML(jdata, this.meterForm);
-        //ParseService.convertJSONToExcel(jdata);
-        console.log(this.fileText)
-      }
-      reader.readAsText(this.file);
+    if (files.length == 2) {
+      console.log("Both files received");
+
+      Array.from(files).forEach((file: any) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const fileText = reader.result as string;
+          const jsonData = JSON.parse(fileText);
+
+          // Distinguish the files by their content
+          try {
+            //Detects if there is a JSON file containing meter data
+            if (jsonData?.meters !== undefined) {
+              console.log("Meter data identified");
+
+              // Directly storing the parsed JSON in the meterData variable
+              this.importedmeterData = jsonData;
+
+              //Converting the JSON to XML
+              ParseService.convertJSONToXML(this.importedmeterData);
+            }
+
+            //Detects if there is a JSON file containing billing data
+            else if (jsonData?.base !== undefined && 'bill_start_date' in jsonData?.base) {
+              console.log("Billing data identified");
+
+              // Directly storing the parsed JSON in the billingData variable
+              this.importedbillingData = jsonData;
+
+              //Converts the JSON to XML
+              ParseService.convertJSONToXML(this.importedbillingData);
+            }
+
+            // If the file contains data we do not expect (non-billing or meter data), log an error
+            else {
+              console.error("Unknown file type");
+            }
+
+            ParseService.convertJSONToExcel(this.importedbillingData, this.importedmeterData);
+          }
+          catch (e) {
+            console.log(e);
+          }
+        };
+
+        reader.readAsText(file);
+      });
+    }
+
+    else {
+      console.log("Exactly two files were expected, but 0, 1, or 3+ were received");
     }
   }
 
@@ -188,11 +230,8 @@ export class AppComponent implements OnInit {
 
   }
 
-
   ngOnInit() {
   }
-
-
 
   async apiCall(key: string) {
     console.log(key)
@@ -202,14 +241,14 @@ export class AppComponent implements OnInit {
       const data: any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken);
       console.log(data)
       console.log(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken)
-      //const referral: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken, '{"utility": "DEMO", "scenario": "residential"}')
-      //console.log(referral)
-      //this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + key + '?referrals=' + referral.referral + '&' + this.accessToken)
-      this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?authorizations='+ key + '&' + this.accessToken)
+      const referral: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken, '{"utility": "DEMO", "scenario": "residential"}')
+      console.log(referral)
+      this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + key + '?referrals=' + referral.referral + '&' + this.accessToken)
+      this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?' + this.accessToken)
       this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + key + '&' + this.accessToken)
 
       //Code to handle successful response
-      //console.log(this.authForm);
+      console.log(this.authForm);
       console.log(this.meterForm);
       console.log(this.billsForm);
       ParseService.convertJSONToExcel(this.billingData, this.meterForm)

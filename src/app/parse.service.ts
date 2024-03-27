@@ -4,7 +4,7 @@ import X2JS from 'x2js';
 export class ParseService {
   constructor() { }
 
-  static convertJSONToXML(jsonData: any, meterData: any) {
+  static convertJSONToXML(jsonData: any) {
     //Create new instance of X2JS
     let x2js: X2JS = new X2JS();
 
@@ -161,11 +161,11 @@ export class ParseService {
     ];
 
     //Test the above objects
-    console.log(billingData);
-    console.log(billingData.base);
-    console.log(billingData.sources);
-    console.log(billingData.line_items);
-    console.log(billingData.tiers);
+    // console.log(billingData);
+    // console.log(billingData.base);
+    // console.log(billingData.sources);
+    // console.log(billingData.line_items);
+    // console.log(billingData.tiers);
 
     facilitiesSheet.addRow({
       "Facility Name": billingData.base.billing_contact,
@@ -175,13 +175,6 @@ export class ParseService {
       "State": billingData.base.service_address.split(",")[2].substring(0, 3),
       "Contact Name": billingData.base.billing_contact,
 
-    })
-
-    metersutilitiesSheet.addRow({
-      "Meter Number (unique)": meterData.meters[0].uid,
-      "Source": meterData.meters[0].base.service_class,
-      "Meter Name (Display)": meterData.meters[0].base.service_tariff,
-      "Collection Unit": billingData.base.bill_total_unit
     })
 
     electricitySheet.addRow({
@@ -197,7 +190,15 @@ export class ParseService {
       "Date": billingData.base.bill_end_date
     })
 
-
+    meterData.meters.forEach((element: any) => {
+      console.log(element.uid);
+      metersutilitiesSheet.addRow({
+        "Meter Number (unique)": element.uid,
+        "Source": element.base.service_class,
+        "Meter Name (Display)": element.base.service_tariff,
+        "Collection Unit": billingData.base.bill_total_unit
+      })
+    });
 
     workbook.xlsx.writeBuffer()
       .then((buffer: BlobPart) => {
