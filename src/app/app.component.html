@@ -8,9 +8,9 @@
               <div class="row col-8">
                 <label class="form-label text-light" for="inputKeyBox">Enter Your Authorization Key:</label>
               </div>
-              <input id="inputKeyBox" type="text" class="form-control" #authKey (keyup.enter)="getKey(authKey.value)" placeholder="Key">
+              <input id="inputKeyBox" type="text" class="form-control" #authKey (click)="apiCall()" placeholder="Key">
               <div class="row col-1">
-                <div *ngIf="!(loader.isLoading$ | async)" class="spinner-overlay" (click)="getForms">
+                <div *ngIf="!(loader.isLoading$ | async)" class="spinner-overlay" (click)="apiCall()">
                   <app-logo-button class="offset-3 mt-3"></app-logo-button>
                </div>
 
