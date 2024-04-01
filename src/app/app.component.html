@@ -17,12 +17,8 @@
                 <label class="form-label text-light" for="endDate">End Date:</label>
               </div>
               <input id="endDate" class="form-control" #endDate type="date">
-              <input id="endDate" class="form-control" #endDate type="date">
               <div class="row col-1">
-                <div *ngIf="!(loader.isLoading$ | async)" class="spinner-overlay" (click)="apiCall(authKey.value,startDate.value,endDate.value)">
-                  <app-logo-button class="offset-3 mt-3"></app-logo-button>
-               </div>
-
+                  <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value,startDate.value,endDate.value)"></app-logo-button>
               </div>
             </form>
           </div>

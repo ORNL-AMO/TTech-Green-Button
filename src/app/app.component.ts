@@ -12,7 +12,6 @@ import { lastValueFrom } from 'rxjs';
 import { ParseService } from './parse.service';
 import internal from 'node:stream';
 import { end } from '@popperjs/core';
-
 import { LoaderService } from './loader.service';
 
 
@@ -181,6 +180,11 @@ async apiNew(){
     //mark token 436742
     //437638
 
+    
+    const button = document.getElementById("spin-button")as HTMLButtonElement;
+    button.classList.add("spin");
+    button.disabled=true;
+    
     try {
       
       var TestauthForm: any = await new Promise((resolve) => {
@@ -240,11 +244,13 @@ async apiNew(){
       // console.log(this.authForm);
       // console.log(this.meterForm);
       console.log(this.billsForm);
-      ParseService.convertJSONToExcel(this.billingData, this.meterForm)
+      //ParseService.convertJSONToExcel(this.billingData, this.meterForm)
       //this.exportServ.exportJSON(this.billsForm);
 
     } catch (error) {
       console.log(error)
     }
+    button.disabled=false;
+    button.classList.remove("spin");
   }
 }
