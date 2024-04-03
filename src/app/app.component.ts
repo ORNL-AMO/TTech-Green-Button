@@ -13,6 +13,7 @@ import { ParseService } from './parse.service';
 import internal from 'node:stream';
 import { end } from '@popperjs/core';
 import { LoaderService } from './loader.service';
+import { Block } from '@angular/compiler';
 
 
 @Component({
@@ -184,7 +185,8 @@ async apiNew(){
     const button = document.getElementById("spin-button")as HTMLButtonElement;
     button.classList.add("spin");
     button.disabled=true;
-    
+    let divLoading = document.getElementById("divLoading") as HTMLElement;
+    divLoading.style.display = 'block';
     try {
       
       var TestauthForm: any = await new Promise((resolve) => {
@@ -252,5 +254,6 @@ async apiNew(){
     }
     button.disabled=false;
     button.classList.remove("spin");
+    divLoading.style.display='none'
   }
 }
