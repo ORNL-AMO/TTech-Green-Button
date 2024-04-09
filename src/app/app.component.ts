@@ -118,6 +118,34 @@ export class AppComponent implements OnInit {
   ngOnInit() {
   }
 
+
+// takes in email and loops through all authorizations on the account to find authorized accounts with the email
+async apiFindEmail(email: string){
+  console.log('finding email')
+  var allAuthForm: any = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?' + this.accessToken));
+    }, 25000); // 25000 milliseconds = 25 seconds
+  });
+  var arrFound:any = []
+
+  allAuthForm.authorizations.forEach((element: any) => {
+    if(email.toLowerCase() == element.customer_email.toLowerCase()){
+      console.log('email found')
+      if(element.uid != 'undefined'){
+        arrFound.push('email: '+email+' authID: '+ element.uid +'\n')
+      }else{
+        console.log('email '+email+' not found')
+      }
+    }
+  });
+  if(arrFound.length == 0){
+    alert('email not found')
+  }else {
+    alert(arrFound)
+  }
+}
+
 async apiNew(){
   // generates new users for testing
   try {

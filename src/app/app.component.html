@@ -12,7 +12,10 @@
               <div class="row col-8 mt-2">
                 <label class="form-label text-light" for="startDate">Start Date:</label>
                 <button class="btn bg-white" type="button" (click)="apiNew()">New User APi test</button>
-
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Recipient's username" #email aria-label="Recipient's username" aria-describedby="button-addon2">
+                  <button class="btn btn-outline-secondary" (click)="apiFindEmail(email.value)" type="button" id="button-addon2">Button</button>
+                </div>
               </div>
               <input id="startDate" class="form-control" #startDate type="date">
               <div class="row col-8 mt-2">
