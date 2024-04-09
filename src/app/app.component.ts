@@ -121,7 +121,7 @@ export class AppComponent implements OnInit {
   }
 
 async apiNew(){
-  // for new users
+  // generates new users for testing
   try {
     const data: any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken);
     console.log(data)
@@ -133,42 +133,9 @@ async apiNew(){
         resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
       }, 25000); // 25000 milliseconds = 25 seconds
     });
-    // this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?referrals=' + referral.referral + '&' + this.accessToken + '&include=meters')
 
-    // console.log(TestauthForm);
-    // console.log(TestauthForm.authorizations[0].meters.meters[0].uid)
-    // let meterID = TestauthForm.authorizations[0].meters.meters[0].uid
-    // const data1: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'meters/historical-collection?' + this.accessToken, '{"meters": ['+ TestauthForm.authorizations[0].meters.meters[0].uid +']}');
-    // //    'https://utilityapi.com/api/v2/meters/historical-collection'
-    // console.log(data1);
-    // let ticks = 1000
-    // var pollMeter: any = await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters/' + meterID + '?' + this.accessToken));
-    //   }, ticks); // 25000 milliseconds = 25 seconds
-    // });
-    // while (pollMeter.status == "pending"){
-    //   ticks += 5000
-    //     pollMeter = await new Promise((resolve) => {
-    //     setTimeout(() => {
-    //       resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters/' + meterID + '?' + this.accessToken));
-    //     }, ticks); // 25000 milliseconds = 25 seconds
-    //   });
-    // }
-    // console.log(pollMeter)
-    // const data2: any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?meters='+ meterID +'&' + this.accessToken);
-    // console.log(data2)
-    // // this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + authToken + '?referrals=' + referral.referral + '&' + this.accessToken)
-    // // this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?authorizations='+ authToken + '&' + this.accessToken)
-    // //this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + authToken + '&' + this.accessToken)
-
-    // //Code to handle successful response
-    // // console.log(this.authForm);
-    // // console.log(this.meterForm);
-    // // console.log(this.billsForm);
-    // //ParseService.convertJSONToExcel(this.billingData, this.meterForm)
-    // //this.exportServ.exportJSON(data2)
-    
+    console.log(TestauthForm)
+ 
   } catch (error) {
     console.log(error)
   }
@@ -188,29 +155,31 @@ async apiNew(){
     let divLoading = document.getElementById("divLoading") as HTMLElement;
     divLoading.style.display = 'block';
     try {
-      
       var TestauthForm: any = await new Promise((resolve) => {
         setTimeout(() => {
           resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + authToken + '?include=meters&' + this.accessToken));
         }, 1000); // 25000 milliseconds = 25 seconds
       });
-      // this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?referrals=' + referral.referral + '&' + this.accessToken + '&include=meters')
-
       console.log(TestauthForm);
       console.log(TestauthForm.meters.meters[0].uid)
+
+      // creates a string of meter numbers to be use in the meters post below
       let meterID = '';
-      TestauthForm.meters.meters.forEach((element:any) => {
+      TestauthForm.meters.meters.forEach((element:any) => { 
         meterID += '"'+ element.uid +'",'
       });
       meterID = meterID.slice(0,-1)
       console.log(meterID)
-      const data1: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'meters/historical-collection?' + this.accessToken, '{"meters": ['+ meterID +']}');
-      //    'https://utilityapi.com/api/v2/meters/historical-collection'
-      meterID = meterID.replaceAll('"','')
+
+      const meterHist: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'meters/historical-collection?' + this.accessToken, '{"meters": ['+ meterID +']}');
+
+      //removes all " in the string because they are no longer needed
+      meterID = meterID.replaceAll('"','') 
       console.log(meterID)
-      console.log(data1);
+
+      // Calls utilityAPI and has to wait for it to populate with data. This can take a while usually under 2 min
       let ticks = 1000
-      var pollMeter: any = await new Promise((resolve) => {
+      var pollMeter: any = await new Promise((resolve) => { 
         setTimeout(() => {
           resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'meters/' + meterID + '?' + this.accessToken));
         }, ticks); // 25000 milliseconds = 25 seconds
@@ -224,6 +193,8 @@ async apiNew(){
         });
       }
       console.log(pollMeter)
+
+      // allows for use of start and end date when getting billing data 
       let strDate = ''
       if(startDate != undefined){
         strDate = '&start='+ startDate +'&end='
@@ -236,15 +207,9 @@ async apiNew(){
       } else{
         strDate += '&end='
       }
-      // this.authForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/' + authToken + '?referrals=' + referral.referral + '&' + this.accessToken)
-      // this.meterForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'meters?authorizations='+ authToken + '&' + this.accessToken)
-      //this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?authorizations=' + authToken + '&' + this.accessToken)
       this.billsForm = await this.apiServ.get(Constants.API_ENDPOINT1 + 'bills?meters='+ meterID + strDate +'&' + this.accessToken); //add dates here start=YYY-MM-DD end=YYY-MM-DD
 
-
-      //Code to handle successful response
-      // console.log(this.authForm);
-      // console.log(this.meterForm);
+      //calls the parse and export functions when needed.
       console.log(this.billsForm);
       //ParseService.convertJSONToExcel(this.billingData, this.meterForm)
       //this.exportServ.exportJSON(this.billsForm);
