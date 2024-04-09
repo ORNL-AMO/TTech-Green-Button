@@ -88,7 +88,7 @@ export class AppComponent implements OnInit {
               console.error("Unknown file type");
             }
 
-            ParseService.convertJSONToExcel(this.importedbillingData, this.importedmeterData);
+            ParseService.convertJSONToExcel(this.importedbillingData);
           }
           catch (e) {
             console.log(e);
@@ -230,7 +230,7 @@ async apiNew(){
 
       //calls the parse and export functions when needed.
       console.log(this.billsForm);
-      ParseService.convertJSONToExcel(this.billsForm, this.meterForm)
+      ParseService.convertJSONToExcel(this.billsForm)
       //this.exportServ.exportJSON(this.billsForm);
 
     } catch (error) {
