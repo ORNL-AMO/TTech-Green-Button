@@ -18,7 +18,7 @@ export class ParseService {
     console.log(xmlData);
   }
 
-  static convertJSONToExcel(billingData: any, meterData:any) {
+  static convertJSONToExcel(billingData: any) {
     //Create a workbook
     const workbook = new ExcelJS.Workbook();
 
@@ -167,39 +167,70 @@ export class ParseService {
     // console.log(billingData.line_items);
     // console.log(billingData.tiers);
 
-    facilitiesSheet.addRow({
-      "Facility Name": billingData.base.billing_contact,
-      "Address": billingData.base.service_address.split(",")[0],
-      "Country": "US",
-      "City": billingData.base.service_address.split(",")[1],
-      "State": billingData.base.service_address.split(",")[2].substring(0, 3),
-      "Contact Name": billingData.base.billing_contact,
+    // facilitiesSheet.addRow({
+    //   "Facility Name": billingData.base.billing_contact,
+    //   "Address": billingData.base.service_address.split(",")[0],
+    //   "Country": "US",
+    //   "City": billingData.base.service_address.split(",")[1],
+    //   "State": billingData.base.service_address.split(",")[2].substring(0, 3),
+    //   "Contact Name": billingData.base.billing_contact,
+    // })
 
-    })
+    // electricitySheet.addRow({
+    //   "Meter Number": billingData.meter_uid,
+    //   "Read Date": billingData.base.bill_end_date,
+    //   "Total Consumption": billingData.base.bill_total_kwh,
+    //   "Total Cost": billingData.base.bill_total_cost,
+    //   "Total Consuption": billingData.base.bill_total_kwh
+    // })
 
-    electricitySheet.addRow({
-      "Meter Number": billingData.meter_uid,
-      "Read Date": billingData.base.bill_end_date,
-      "Total Consumption": billingData.base.bill_total_kwh,
-      "Total Cost": billingData.base.bill_total_cost,
-      "Total Consuption": billingData.base.bill_total_kwh
-    })
+    // predictorsSheet.addRow({
+    //   "Facility Name": billingData.base.billing_contact,
+    //   "Date": billingData.base.bill_end_date
+    // })
 
-    predictorsSheet.addRow({
-      "Facility Name": billingData.base.billing_contact,
-      "Date": billingData.base.bill_end_date
-    })
-
-    meterData.meters.forEach((element: any) => {
-      console.log(element.uid);
-      metersutilitiesSheet.addRow({
-        "Meter Number (unique)": element.uid,
-        "Source": element.base.service_class,
-        "Meter Name (Display)": element.base.service_tariff,
-        "Collection Unit": billingData.base.bill_total_unit
+    // meterData.meters.forEach((element: any) => {
+    //   console.log(element.uid);
+    //   metersutilitiesSheet.addRow({
+    //     "Meter Number (unique)": element.uid,
+    //     "Source": element.base.service_class,
+    //     "Meter Name (Display)": element.base.service_tariff,
+    //     "Collection Unit": billingData.base.bill_total_unit
+    //   })
+    // });
+    billingData.bills.forEach((bill:any)=>{
+      facilitiesSheet.addRow({
+        "Facility Name": bill.base.billing_contact,
+        "Address": bill.base.service_address.split(",")[0],
+        "Country": "US",
+        "City": bill.base.service_address.split(",")[1],
+        "State": bill.base.service_address.split(",")[2].substring(0, 3),
+        "Contact Name": bill.base.billing_contact,
       })
-    });
 
+      electricitySheet.addRow({
+        "Meter Number": bill.meter_uid,
+        "Read Date": bill.base.bill_end_date,
+        "Total Consumption": bill.base.bill_total_kwh,
+        "Total Cost": bill.base.bill_total_cost,
+        "Total Consuption": bill.base.bill_total_kwh
+      })
+
+      predictorsSheet.addRow({
+        "Facility Name": bill.base.billing_contact,
+        "Date": bill.base.bill_end_date
+      })
+
+      bill.line_items.forEach((meter:any)=>{
+        metersutilitiesSheet.addRow({
+          "Facility Name": bill.base.billing_contact,
+          "Meter Number (unique)": bill.meter_uid,
+          "Source": bill.base.service_class,
+          "Meter Name (Display)": bill.base.service_tariff,
+          "Collection Unit": bill.base.bill_total_unit
+        })
+      })
+    })
     workbook.xlsx.writeBuffer()
       .then((buffer: BlobPart) => {
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
