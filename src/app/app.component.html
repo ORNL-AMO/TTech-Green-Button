@@ -12,17 +12,16 @@
               <div class="row col-8 mt-2">
                 <label class="form-label text-light" for="startDate">Start Date:</label>
                 <button class="btn bg-white" type="button" (click)="apiNew()">New User APi test</button>
-
               </div>
               <input id="startDate" class="form-control" #startDate type="date">
               <div class="row col-8 mt-2">
                 <label class="form-label text-light" for="endDate">End Date:</label>
               </div>
               <input id="endDate" class="form-control" #endDate type="date">
+              <div id="divLoading" class="text-light mt-3" style="display: none;">
+                <h4>Loading...</h4>
+              </div>
               <div class="row col-1 d-flex justify-content-center">
-                <div id="divLoading" class="text-light mt-3" style="display: none;">
-                  <h4>Loading...</h4>
-                </div>
                   <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value,startDate.value,endDate.value)"></app-logo-button>
               </div>
             </form>
@@ -47,6 +46,16 @@
                 </div>
               </div>
             </form>
+          </div>
+          <div class="row col-10 mt-2">
+            <p class="text-light">Enter Email below to search for authorization key:</p>
+            <div id="divSearching" class="text-light" style="display: none;">
+              <h4>Searching...</h4>
+            </div>
+            <div class="input-group">
+              <input type="email" class="form-control" id="inputEmail" placeholder="email" #email>
+              <button class="btn btn-outline-info" (click)="apiFindEmail(email.value)" type="button">Search</button>
+            </div>
           </div>
         </div>
         <div class="right-section" [innerHTML]="displayFile" style="white-space: pre;">

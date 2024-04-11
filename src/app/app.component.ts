@@ -12,7 +12,6 @@ import { lastValueFrom } from 'rxjs';
 import { ParseService } from './parse.service';
 import internal from 'node:stream';
 import { end } from '@popperjs/core';
-import { LoaderService } from './loader.service';
 import { Block } from '@angular/compiler';
 
 
@@ -90,7 +89,7 @@ export class AppComponent implements OnInit {
               console.error("Unknown file type");
             }
 
-            ParseService.convertJSONToExcel(this.importedbillingData, this.importedmeterData);
+            ParseService.convertJSONToExcel(this.importedbillingData);
           }
           catch (e) {
             console.log(e);
@@ -119,6 +118,39 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
   }
+
+
+// takes in email and loops through all authorizations on the account to find authorized accounts with the email
+async apiFindEmail(email: string){
+  console.log('finding email')
+  let divSearching = document.getElementById("divSearching") as HTMLElement;
+  divSearching.style.display = 'block';
+  var allAuthForm: any = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?' + this.accessToken));
+    }, 25000); // 25000 milliseconds = 25 seconds
+  });
+  var arrFound:any = []
+
+  allAuthForm.authorizations.forEach((element: any) => {
+    if(email.toLowerCase() == element.customer_email.toLowerCase()){
+      console.log('email found')
+      if(element.uid != 'undefined'){
+        arrFound.push('email: '+email+' authID: '+ element.uid +'\n')
+      }else{
+        console.log('email '+email+' not found')
+      }
+    }
+  });
+
+  divSearching.style.display='none';
+  
+  if(arrFound.length == 0){
+    alert('email not found')
+  }else {
+    alert(arrFound)
+  }
+}
 
 async apiNew(){
   // generates new users for testing
@@ -211,7 +243,7 @@ async apiNew(){
 
       //calls the parse and export functions when needed.
       console.log(this.billsForm);
-      //ParseService.convertJSONToExcel(this.billingData, this.meterForm)
+      ParseService.convertJSONToExcel(this.billsForm)
       //this.exportServ.exportJSON(this.billsForm);
 
     } catch (error) {
@@ -219,6 +251,7 @@ async apiNew(){
     }
     button.disabled=false;
     button.classList.remove("spin");
-    divLoading.style.display='none'
+    divLoading.style.display='none';
   }
+  
 }
