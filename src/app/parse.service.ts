@@ -198,15 +198,21 @@ export class ParseService {
     //     "Collection Unit": billingData.base.bill_total_unit
     //   })
     // });
+    const facilitiesSet = new Set<String>();
+    const metersSet = new Set<String>();
     billingData.bills.forEach((bill:any)=>{
-      facilitiesSheet.addRow({
+      let facilitiesObj = {
         "Facility Name": bill.base.billing_contact,
         "Address": bill.base.service_address.split(",")[0],
         "Country": "US",
         "City": bill.base.service_address.split(",")[1],
         "State": bill.base.service_address.split(",")[2].substring(0, 3),
         "Contact Name": bill.base.billing_contact,
-      })
+      }
+      if(!facilitiesSet.has(JSON.stringify(facilitiesObj))){
+        facilitiesSet.add(JSON.stringify(facilitiesObj))
+        facilitiesSheet.addRow(facilitiesObj)
+      }
 
       electricitySheet.addRow({
         "Meter Number": bill.meter_uid,
@@ -221,15 +227,17 @@ export class ParseService {
         "Date": bill.base.bill_end_date
       })
 
-      bill.line_items.forEach((meter:any)=>{
-        metersutilitiesSheet.addRow({
-          "Facility Name": bill.base.billing_contact,
-          "Meter Number (unique)": bill.meter_uid,
-          "Source": bill.base.service_class,
-          "Meter Name (Display)": bill.base.service_tariff,
-          "Collection Unit": bill.base.bill_total_unit
-        })
-      })
+      let metersObj = {
+        "Facility Name": bill.base.billing_contact,
+        "Meter Number (unique)": bill.meter_uid,
+        "Source": bill.base.service_class,
+        "Meter Name (Display)": bill.base.service_tariff,
+        "Collection Unit": bill.base.bill_total_unit
+      }
+      if(!metersSet.has(JSON.stringify(metersObj))){
+        metersSet.add(JSON.stringify(metersObj))
+        metersutilitiesSheet.addRow(metersObj)
+      }
     })
     workbook.xlsx.writeBuffer()
       .then((buffer: BlobPart) => {

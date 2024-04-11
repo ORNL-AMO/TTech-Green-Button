@@ -253,4 +253,5 @@ async apiNew(){
     button.classList.remove("spin");
     divLoading.style.display='none';
   }
+  
 }
