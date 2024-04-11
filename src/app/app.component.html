@@ -3,7 +3,7 @@
     <div class="col-10 offset-1">
       <div class="container">
         <div class="left-section">
-          <div class="d-flex justify content-center align-items-top vh-10">
+          <div class="d-flex align-items-top vh-10">
             <form>
               <div class="row col-8">
                 <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
@@ -18,8 +18,11 @@
                 <label class="form-label text-light" for="endDate">End Date:</label>
               </div>
               <input id="endDate" class="form-control" #endDate type="date">
-              <div class="row col-1">
-                <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value,startDate.value,endDate.value)"></app-logo-button>
+              <div id="divLoading" class="text-light mt-3" style="display: none;">
+                <h4>Loading...</h4>
+              </div>
+              <div class="row col-1 d-flex justify-content-center">
+                  <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value,startDate.value,endDate.value)"></app-logo-button>
               </div>
             </form>
           </div>
@@ -46,6 +49,9 @@
           </div>
           <div class="row col-10 mt-2">
             <p class="text-light">Enter Email below to search for authorization key:</p>
+            <div id="divSearching" class="text-light" style="display: none;">
+              <h4>Searching...</h4>
+            </div>
             <div class="input-group">
               <input type="email" class="form-control" id="inputEmail" placeholder="email" #email>
               <button class="btn btn-outline-info" (click)="apiFindEmail(email.value)" type="button">Search</button>
@@ -53,7 +59,6 @@
           </div>
         </div>
         <div class="right-section" [innerHTML]="displayFile" style="white-space: pre;">
-
         </div>
       </div>
     </div>

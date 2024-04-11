@@ -12,6 +12,7 @@ import { lastValueFrom } from 'rxjs';
 import { ParseService } from './parse.service';
 import internal from 'node:stream';
 import { end } from '@popperjs/core';
+import { Block } from '@angular/compiler';
 
 
 @Component({
@@ -122,6 +123,8 @@ export class AppComponent implements OnInit {
 // takes in email and loops through all authorizations on the account to find authorized accounts with the email
 async apiFindEmail(email: string){
   console.log('finding email')
+  let divSearching = document.getElementById("divSearching") as HTMLElement;
+  divSearching.style.display = 'block';
   var allAuthForm: any = await new Promise((resolve) => {
     setTimeout(() => {
       resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?' + this.accessToken));
@@ -139,6 +142,9 @@ async apiFindEmail(email: string){
       }
     }
   });
+
+  divSearching.style.display='none';
+  
   if(arrFound.length == 0){
     alert('email not found')
   }else {
@@ -173,6 +179,13 @@ async apiNew(){
     console.log (authToken)
     //mark token 436742
     //437638
+
+    
+    const button = document.getElementById("spin-button")as HTMLButtonElement;
+    button.classList.add("spin");
+    button.disabled=true;
+    let divLoading = document.getElementById("divLoading") as HTMLElement;
+    divLoading.style.display = 'block';
     try {
       var TestauthForm: any = await new Promise((resolve) => {
         setTimeout(() => {
@@ -236,5 +249,8 @@ async apiNew(){
     } catch (error) {
       console.log(error)
     }
+    button.disabled=false;
+    button.classList.remove("spin");
+    divLoading.style.display='none';
   }
 }

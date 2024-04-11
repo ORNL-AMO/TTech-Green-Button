@@ -6,15 +6,34 @@
     border: none;
     cursor: pointer;
     appearance: none;
-    transition: transform .7s ease-in-out;
     margin-left:10px;
     border-radius: 50%;
-    background-color: inherit;    
+    background-color: inherit;   
+}
+
+@keyframes spin {
+    from { transform:rotate(0deg); }
+    to { transform:rotate(360deg); }
+    from{ background-color:greenyellow; }
+    to{ background-color:greenyellow; }
+    
+}
+
+.spin{
+    animation: spin 2s infinite linear; 
+   
+}
+
+/*@keyframes spin {
+    from { transform:rotate(0deg); }
+    to { transform:rotate(360deg); }
 }
 
 button:active{
-    transform: rotate(360deg);
-    }
+    animation: spin 2s linear infinite; 
+    background-color: greenyellow;
+}*/
+
 img{
     padding: 0px;
     border-radius: 50%;
