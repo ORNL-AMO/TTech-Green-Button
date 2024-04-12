@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as ExcelJS from 'exceljs';
+import { WorkBook } from 'json-as-xlsx';
 import { blob, json } from 'stream/consumers';
 
 
@@ -10,23 +11,10 @@ import { blob, json } from 'stream/consumers';
 
 export class ExportService {
   constructor() { }
-  exportExcel(jsonData: any) {
-    let workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Data');
-
-    // Loop through each object in the JSON data
-    for (let i = 0; i < jsonData.length; i++) {
-      let row = worksheet.getRow(i + 1); // Start at row 2 to skip the header row
-
-      // Loop through each property in each object
-      for (let key in jsonData[i]) {
-        let cell = row.getCell(key);
-        cell.value = jsonData[i][key];
-      }
-    }
+  static exportExcel(workbook: ExcelJS.Workbook) {
 
     workbook.xlsx.writeBuffer()
-      .then(buffer => {
+      .then((buffer: BlobPart) => {
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         const blob = new Blob([buffer], { type: fileType });
 
@@ -45,11 +33,12 @@ export class ExportService {
 
         console.log("Excel file exported successfully");
       })
-      .catch(error => {
+      .catch((error: any) => {
         console.error("Error exporting Excel file:", error);
       });
   }
-  exportJSON(data:any){
+
+  static exportJSON(data:any){
     let jsonData = JSON.stringify(data,null,2);
     let fileType = 'application/json';
     const blob = new Blob([jsonData], {type:fileType});
@@ -67,5 +56,23 @@ export class ExportService {
     document.body.removeChild(a);
 
     console.log("Json file exported successfully");
+  }
+  
+  static exportXML(data:any){
+    let fileType= 'application/xml';
+    const blob = new Blob([data],{type:fileType});
+    let a = document.createElement("a");
+    let url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = "xmltest.xml";
+
+    document.body.appendChild(a);
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+
+    console.log("XML file exported successfully");
   }
 }

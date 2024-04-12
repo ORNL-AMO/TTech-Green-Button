@@ -16,6 +16,7 @@ export class ParseService {
 
     //Output the XML to the console
     console.log(xmlData);
+    return xmlData;
   }
 
   static convertJSONToExcel(billingData: any) {
@@ -239,32 +240,49 @@ export class ParseService {
         metersutilitiesSheet.addRow(metersObj)
       }
     })
-    workbook.xlsx.writeBuffer()
-      .then((buffer: BlobPart) => {
-        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        const blob = new Blob([buffer], { type: fileType });
+    
+    return workbook;
+    // workbook.xlsx.writeBuffer()
+    //   .then((buffer: BlobPart) => {
+    //     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    //     const blob = new Blob([buffer], { type: fileType });
 
-        let a = document.createElement("a");
-        let url = window.URL.createObjectURL(blob);
+    //     let a = document.createElement("a");
+    //     let url = window.URL.createObjectURL(blob);
 
-        a.href = url;
-        a.download = "convertedData.xlsx";
+    //     a.href = url;
+    //     a.download = "convertedData.xlsx";
 
-        document.body.appendChild(a);
-        a.click();
+    //     document.body.appendChild(a);
+    //     a.click();
 
-        // Release resources associated with the URL
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+    //     // Release resources associated with the URL
+    //     window.URL.revokeObjectURL(url);
+    //     document.body.removeChild(a);
 
-        console.log("Excel file exported successfully");
-      })
-      .catch((error: any) => {
-        console.error("Error exporting Excel file:", error);
-      });
+    //     console.log("Excel file exported successfully");
+    //   })
+    //   .catch((error: any) => {
+    //     console.error("Error exporting Excel file:", error);
+    //   });
   }
 
   static validateIncomingData(jsonData: any) {
 
   }
+  static convertExcelToJson(workbook:ExcelJS.Workbook):any{
+    let jsonData:{sheetName:string;data:object[]}[] = [];
+    workbook.eachSheet((worksheet)=>{
+      let sheetData:object[] = [];
+      worksheet.eachRow((row)=>{
+        let rowData: {[key:string]:any} = {};
+        row.eachCell((cell,colNumber)=>{
+          rowData[`Column${colNumber}`]=cell.value;
+        });
+        sheetData.push(rowData);
+      });
+      jsonData.push({sheetName:worksheet.name,data:sheetData});
+    });
+    return jsonData;
+  };
 }
