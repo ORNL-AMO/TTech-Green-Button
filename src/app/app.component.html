@@ -3,14 +3,26 @@
     <div class="col-10 offset-1">
       <div class="container">
         <div class="left-section">
-          <div class="d-flex justify content-center align-items-top vh-10">
+          <div class="d-flex align-items-top vh-10">
             <form>
               <div class="row col-8">
-                <label class="form-label text-light" for="inputKeyBox">Loading Data:</label>
+                <label class="form-label text-light" for="inputKeyBox">Enter your authorization key:</label>
               </div>
-              <input id="inputKeyBox" type="text" class="form-control" #authKey (keyup.enter)="apiCall(authKey.value)" placeholder="Key">
-              <div class="row col-1">
-                <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value)"></app-logo-button>
+              <input id="inputKeyBox" type="number" class="form-control" #authKey (keyup.enter)="apiCall(authKey.value)" placeholder="Key">
+              <div class="row col-8 mt-2">
+                <label class="form-label text-light" for="startDate">Start Date:</label>
+                <button class="btn bg-white" type="button" (click)="apiNew()">New User APi test</button>
+              </div>
+              <input id="startDate" class="form-control" #startDate type="date">
+              <div class="row col-8 mt-2">
+                <label class="form-label text-light" for="endDate">End Date:</label>
+              </div>
+              <input id="endDate" class="form-control" #endDate type="date">
+              <div id="divLoading" class="text-light mt-3" style="display: none;">
+                <h4>Loading...</h4>
+              </div>
+              <div class="row col-1 d-flex justify-content-center">
+                  <app-logo-button class="offset-3 mt-3" (click)="apiCall(authKey.value,startDate.value,endDate.value)"></app-logo-button>
               </div>
             </form>
           </div>
@@ -19,10 +31,11 @@
               <div class="row">
                 <div class="import-button">
                   <label class="btn btn-primary btn-lg" for="dataFile" style="width: 160px;">Import Data</label>
-                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)" multiple>
+                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
                 </div>
                 <div ngbDropdown class="export-button">
-                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;" ngbDropdownToggle>Export Data</button>
+                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;"
+                    ngbDropdownToggle>Export Data</button>
                   <div ngbDropdownMenu aria-labelledby="exportDropdown">
                     <div class="d-grid">
                       <button ngbDropdownItem type="button" (click)="exportAsExcel()">Export as XLSX</button>
@@ -32,6 +45,16 @@
                 </div>
               </div>
             </form>
+          </div>
+          <div class="row col-10 mt-2">
+            <p class="text-light">Enter Email below to search for authorization key:</p>
+            <div id="divSearching" class="text-light" style="display: none;">
+              <h4>Searching...</h4>
+            </div>
+            <div class="input-group">
+              <input type="email" class="form-control" id="inputEmail" placeholder="email" #email>
+              <button class="btn btn-outline-info" (click)="apiFindEmail(email.value)" type="button">Search</button>
+            </div>
           </div>
         </div>
         <div class="right-section"  style="white-space: pre;">
