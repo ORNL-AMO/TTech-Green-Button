@@ -8,11 +8,9 @@ import { OnInit } from '@angular/core';
 import { Constants } from './config/constants';
 import { ApiHttpService } from './api.service';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
 import { ParseService } from './parse.service';
-import internal from 'node:stream';
-import { end } from '@popperjs/core';
-import { Block } from '@angular/compiler';
+import * as ExcelJS from 'exceljs';
+import { text } from 'stream/consumers';
 
 
 @Component({
@@ -25,10 +23,7 @@ import { Block } from '@angular/compiler';
 
 })
 export class AppComponent implements OnInit {
-  importedbillingData: any = null;
-  importedmeterData: any = null;
   apiTitle = Constants.TitleOfSite;
-  title = 'World';
   file!: File;
   fileText!: any;
   displayFile!: String;
@@ -39,7 +34,7 @@ export class AppComponent implements OnInit {
   authForm: any;
   meterForm: any;
   billsForm: any;
-
+  parsedWorkbook!:ExcelJS.Workbook;
 
   constructor(public exportServ: ExportService, public apiServ:ApiHttpService, public http: HttpClient){
     console.log(Constants.API_ENDPOINT); 
@@ -47,41 +42,34 @@ export class AppComponent implements OnInit {
 
   onChange(event: any) {
     console.log(event);
-    const files = event.target.files;
+    this.file = event.target.file[0];
 
-    if (files.length == 2) {
-      console.log("Both files received");
-    }
     if(this.file){
       console.log("File recieved");
       const reader = new FileReader();
       reader.onload =()=>{
-        this.fileText = JSON.parse(reader.result as string);
-        this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Import Data</h3></div><div class="card-body"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
-        console.log(this.displayFile)
         let jdata: string = JSON.parse(reader.result as string);
         console.log(jdata);
-        ParseService.convertJSONToXML(jdata);
-        ParseService.convertJSONToExcel(jdata);
-
+        this.parsedWorkbook = ParseService.convertJSONToExcel(jdata);
+        this.fileText = ParseService.convertExcelToJson(this.parsedWorkbook);
+        this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Export Data</h3></div><div class="card-body"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
     }
     reader.readAsText(this.file);
     }
   }
 
   exportAsExcel() {
-    console.log(this.exportServ.exportExcel(this.fileText))
+    ExportService.exportExcel(this.parsedWorkbook)
   }
   exportAsJson() {
-
-    // this.getForms().then( data =>{
-    //   this.exportServ.exportJSON(data);
-    // });
+    ExportService.exportJSON(this.fileText);
   }
-
+  exportAsXML(){
+    let xmlData = ParseService.convertJSONToXML(this.fileText)
+    ExportService.exportXML(xmlData);
+  }
   ngOnInit() {
   }
-
 
 // takes in email and loops through all authorizations on the account to find authorized accounts with the email
 async apiFindEmail(email: string){
@@ -206,8 +194,12 @@ async apiNew(){
 
       //calls the parse and export functions when needed.
       console.log(this.billsForm);
-      ParseService.convertJSONToExcel(this.billsForm)
-      //this.exportServ.exportJSON(this.billsForm);
+      this.parsedWorkbook = ParseService.convertJSONToExcel(this.billsForm)
+      this.fileText = ParseService.convertExcelToJson(this.parsedWorkbook)
+      this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Export Data</h3></div><div class="card-body"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
+
+      // remove in final iteration
+      ExportService.exportExcel(this.parsedWorkbook)
 
     } catch (error) {
       console.log(error)

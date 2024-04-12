@@ -40,6 +40,7 @@
                     <div class="d-grid">
                       <button ngbDropdownItem type="button" (click)="exportAsExcel()">Export as XLSX</button>
                       <button ngbDropdownItem type="button" (click)="exportAsJson()">Export as JSON</button>
+                      <button ngbDropdownItem type="button" (click)="exportAsXML()">Export as XML</button>
                     </div>
                   </div>
                 </div>
@@ -58,7 +59,7 @@
           </div>
         </div>
         <div class="right-section"  style="white-space: pre;">
-          <div style="max-height: 300px; overflow-y: auto;" [innerHTML]="displayFile">
+          <div style="max-height: 900px; overflow-y: auto;" [innerHTML]="displayFile">
 
           </div>
         </div>
