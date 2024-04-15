@@ -4,6 +4,12 @@ import X2JS from 'x2js';
 export class ParseService {
   constructor() { }
 
+  /**
+ * Converts the given JSON data into XML format.
+ *
+ * @param jsonData The JSON data to be converted into XML.
+ * @returns The XML representation of the input JSON data.
+ */
   static convertJSONToXML(jsonData: any) {
     //Create new instance of X2JS
     let x2js: X2JS = new X2JS();
@@ -19,6 +25,11 @@ export class ParseService {
     return xmlData;
   }
 
+  /**
+ * Converts JSON data into an Excel file.
+ * @param {any} billingData - The JSON data to be converted into an Excel file.
+ * @returns {ExcelJS.Workbook} - The created Excel file.
+ */
   static convertJSONToExcel(billingData: any) {
     //Create a workbook
     const workbook = new ExcelJS.Workbook();
@@ -163,6 +174,7 @@ export class ParseService {
 
     const facilitiesSet = new Set<String>();
     const metersSet = new Set<String>();
+
     billingData.bills.forEach((bill: any) => {
       let facilitiesObj = {
         "Facility Name": bill.base.billing_contact,
@@ -206,6 +218,11 @@ export class ParseService {
     return workbook;
   }
 
+  /**
+ * Converts an Excel file to JSON format.
+ * @param {ExcelJS.Workbook} workbook - The Excel file to be converted into JSON.
+ * @returns {any} - The JSON representation of the input Excel file.
+ */
   static convertExcelToJson(workbook: ExcelJS.Workbook): any {
     let jsonData: { sheetName: string; data: object[] }[] = [];
     workbook.eachSheet((worksheet) => {
