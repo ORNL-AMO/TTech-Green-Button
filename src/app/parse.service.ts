@@ -4,6 +4,12 @@ import X2JS from 'x2js';
 export class ParseService {
   constructor() { }
 
+  /**
+ * Converts the given JSON data into XML format.
+ *
+ * @param jsonData The JSON data to be converted into XML.
+ * @returns The XML representation of the input JSON data.
+ */
   static convertJSONToXML(jsonData: any) {
     //Create new instance of X2JS
     let x2js: X2JS = new X2JS();
@@ -19,6 +25,11 @@ export class ParseService {
     return xmlData;
   }
 
+  /**
+ * Converts JSON data into an Excel file.
+ * @param {any} billingData - The JSON data to be converted into an Excel file.
+ * @returns {ExcelJS.Workbook} - The created Excel file.
+ */
   static convertJSONToExcel(billingData: any) {
     //Create a workbook
     const workbook = new ExcelJS.Workbook();
@@ -163,7 +174,8 @@ export class ParseService {
 
     const facilitiesSet = new Set<String>();
     const metersSet = new Set<String>();
-    billingData.bills.forEach((bill:any)=>{
+
+    billingData.bills.forEach((bill: any) => {
       let facilitiesObj = {
         "Facility Name": bill.base.billing_contact,
         "Address": bill.base.service_address.split(",")[0],
@@ -172,7 +184,7 @@ export class ParseService {
         "State": bill.base.service_address.split(",")[2].substring(0, 3),
         "Contact Name": bill.base.billing_contact,
       }
-      if(!facilitiesSet.has(JSON.stringify(facilitiesObj))){
+      if (!facilitiesSet.has(JSON.stringify(facilitiesObj))) {
         facilitiesSet.add(JSON.stringify(facilitiesObj))
         facilitiesSheet.addRow(facilitiesObj)
       }
@@ -197,53 +209,32 @@ export class ParseService {
         "Meter Name (Display)": bill.base.service_tariff,
         "Collection Unit": bill.base.bill_total_unit
       }
-      if(!metersSet.has(JSON.stringify(metersObj))){
+      if (!metersSet.has(JSON.stringify(metersObj))) {
         metersSet.add(JSON.stringify(metersObj))
         metersutilitiesSheet.addRow(metersObj)
       }
     })
-    
+
     return workbook;
-    // workbook.xlsx.writeBuffer()
-    //   .then((buffer: BlobPart) => {
-    //     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    //     const blob = new Blob([buffer], { type: fileType });
-
-    //     let a = document.createElement("a");
-    //     let url = window.URL.createObjectURL(blob);
-
-    //     a.href = url;
-    //     a.download = "convertedData.xlsx";
-
-    //     document.body.appendChild(a);
-    //     a.click();
-
-    //     // Release resources associated with the URL
-    //     window.URL.revokeObjectURL(url);
-    //     document.body.removeChild(a);
-
-    //     console.log("Excel file exported successfully");
-    //   })
-    //   .catch((error: any) => {
-    //     console.error("Error exporting Excel file:", error);
-    //   });
   }
 
-  static validateIncomingData(jsonData: any) {
-
-  }
-  static convertExcelToJson(workbook:ExcelJS.Workbook):any{
-    let jsonData:{sheetName:string;data:object[]}[] = [];
-    workbook.eachSheet((worksheet)=>{
-      let sheetData:object[] = [];
-      worksheet.eachRow((row)=>{
-        let rowData: {[key:string]:any} = {};
-        row.eachCell((cell,colNumber)=>{
-          rowData[`Column${colNumber}`]=cell.value;
+  /**
+ * Converts an Excel file to JSON format.
+ * @param {ExcelJS.Workbook} workbook - The Excel file to be converted into JSON.
+ * @returns {any} - The JSON representation of the input Excel file.
+ */
+  static convertExcelToJson(workbook: ExcelJS.Workbook): any {
+    let jsonData: { sheetName: string; data: object[] }[] = [];
+    workbook.eachSheet((worksheet) => {
+      let sheetData: object[] = [];
+      worksheet.eachRow((row) => {
+        let rowData: { [key: string]: any } = {};
+        row.eachCell((cell, colNumber) => {
+          rowData[`Column${colNumber}`] = cell.value;
         });
         sheetData.push(rowData);
       });
-      jsonData.push({sheetName:worksheet.name,data:sheetData});
+      jsonData.push({ sheetName: worksheet.name, data: sheetData });
     });
     return jsonData;
   };
