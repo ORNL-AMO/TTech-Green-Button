@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
       reader.onload =()=>{
         let jdata: string = JSON.parse(reader.result as string);
         console.log(jdata);
-        this.parsedWorkbook = ParseService.convertJSONToExcel(jdata);
+        //this.parsedWorkbook = ParseService.convertJSONToExcel(jdata);
         this.fileText = ParseService.convertExcelToJson(this.parsedWorkbook);
         this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Export Data</h3></div><div class="card-body"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
     }
@@ -105,7 +105,7 @@ async apiFindEmail(email: string){
   async apiCall (authToken: string,startDate?:string,endDate?:string) {
     //for returning users that have their auth token
     console.log (authToken)
-        
+
     const button = document.getElementById("spin-button")as HTMLButtonElement;
     button.classList.add("spin");
     button.disabled=true;
@@ -168,7 +168,7 @@ async apiFindEmail(email: string){
 
       //calls the parse and export functions when needed.
       console.log(this.billsForm);
-      this.parsedWorkbook = ParseService.convertJSONToExcel(this.billsForm)
+      //this.parsedWorkbook = ParseService.convertJSONToExcel(this.billsForm)
       this.fileText = ParseService.convertExcelToJson(this.parsedWorkbook)
       this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Export Data</h3></div><div class="card-body"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
 

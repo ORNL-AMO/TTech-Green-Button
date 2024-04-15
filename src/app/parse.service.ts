@@ -58,6 +58,8 @@ export class ParseService {
       { header: 'Contact Email', key: "Contact Email", width: 20 },
     ];
 
+
+
     //Meters-Utilities
     metersutilitiesSheet.columns = [
       { header: 'Facility Name', key: "Facility Name", width: 20 },
@@ -83,6 +85,65 @@ export class ParseService {
       { header: 'Notes', key: "Notes", width: 20 },
       { header: 'Building / Location', key: "Building / Location", width: 20 }
     ];
+
+    // setMetersWorksheet(workbook: ExcelJS.Workbook, facilityId?: string): ExcelJS.Worksheet {
+    //   let worksheet: ExcelJS.Worksheet = workbook.getWorksheet('Meters-Utilities');
+    //   let facilityMeters: Array<IdbUtilityMeter> = this.utilityMeterDbService.accountMeters.getValue();
+    //   if (facilityId) {
+    //     facilityMeters = facilityMeters.filter(meter => { return meter.facilityId == facilityId });
+    //   }
+    //   let accountFacilities: Array<IdbFacility> = this.facilityDbService.accountFacilities.getValue();
+    //   let index: number = 2;
+    //   facilityMeters.forEach(meter => {
+    //     let facilityName: string = accountFacilities.find(facility => { return facility.guid == meter.facilityId }).name;
+    //     //A: Facility name
+    //     worksheet.getCell('A' + index).value = 
+    //     //B: Metter Number (unique)
+    //     worksheet.getCell('B' + index).value = 
+    //     //C: Source
+    //     worksheet.getCell('C' + index).value = 
+    //     //D: Scope
+    //     worksheet.getCell('D' + index).value = 
+    //     //E: Meter Name (Display)
+    //     worksheet.getCell('E' + index).value = 
+    //     //F: Meter Group
+    //     worksheet.getCell('F' + index).value = 
+    //     //G: Calendarize Data?
+    //     worksheet.getCell('G' + index).value = 
+    //     //H: Phase or Vehicle
+    //     worksheet.getCell('H' + index).value = 
+    //     //I: Fuel or Emissions
+    //     worksheet.getCell('I' + index).value = 
+    //     //J: Collection Unit
+    //     worksheet.getCell('J' + index).value = 
+    //     //K: Energy Unit
+    //     worksheet.getCell('K' + index).value = 
+    //     //L: Distance Unit
+    //     worksheet.getCell('L' + index).value = 
+    //     //M: Estimation Method
+    //     worksheet.getCell('M' + index).value = 
+    //     //N: Heat Capacity or Fuel Efficiency
+    //     worksheet.getCell('N' + index).value = 
+    //     //O: Include in Energy
+    //     worksheet.getCell('O' + index).value = 
+    //     //P: Site To Source
+    //     worksheet.getCell('P' + index).value =
+    //     //Q: Agreement Type
+    //     worksheet.getCell('Q' + index).value = 
+    //     //R: Retain RECs
+    //     worksheet.getCell('R' + index).value = 
+    //     //S: Account Number
+    //     worksheet.getCell('S' + index).value = 
+    //     //T: Utility Supplier
+    //     worksheet.getCell('T' + index).value = 
+    //     //U: Notes
+    //     worksheet.getCell('U' + index).value = 
+    //     //V: Building / Location
+    //     worksheet.getCell('V' + index).value = 
+    //     index++;
+    //   })
+    //   return worksheet;
+    // }
 
     //Electricity
     electricitySheet.columns = [
