@@ -10,7 +10,6 @@ import { ApiHttpService } from './api.service';
 import { HttpClient } from '@angular/common/http';
 import { ParseService } from './parse.service';
 import * as ExcelJS from 'exceljs';
-import { text } from 'stream/consumers';
 
 
 @Component({
