@@ -161,47 +161,9 @@ export class ParseService {
       { header: 'Date', key: "Date", width: 20 }
     ];
 
-    //Test the above objects
-    // console.log(billingData);
-    // console.log(billingData.base);
-    // console.log(billingData.sources);
-    // console.log(billingData.line_items);
-    // console.log(billingData.tiers);
-
-    // facilitiesSheet.addRow({
-    //   "Facility Name": billingData.base.billing_contact,
-    //   "Address": billingData.base.service_address.split(",")[0],
-    //   "Country": "US",
-    //   "City": billingData.base.service_address.split(",")[1],
-    //   "State": billingData.base.service_address.split(",")[2].substring(0, 3),
-    //   "Contact Name": billingData.base.billing_contact,
-    // })
-
-    // electricitySheet.addRow({
-    //   "Meter Number": billingData.meter_uid,
-    //   "Read Date": billingData.base.bill_end_date,
-    //   "Total Consumption": billingData.base.bill_total_kwh,
-    //   "Total Cost": billingData.base.bill_total_cost,
-    //   "Total Consuption": billingData.base.bill_total_kwh
-    // })
-
-    // predictorsSheet.addRow({
-    //   "Facility Name": billingData.base.billing_contact,
-    //   "Date": billingData.base.bill_end_date
-    // })
-
-    // meterData.meters.forEach((element: any) => {
-    //   console.log(element.uid);
-    //   metersutilitiesSheet.addRow({
-    //     "Meter Number (unique)": element.uid,
-    //     "Source": element.base.service_class,
-    //     "Meter Name (Display)": element.base.service_tariff,
-    //     "Collection Unit": billingData.base.bill_total_unit
-    //   })
-    // });
     const facilitiesSet = new Set<String>();
     const metersSet = new Set<String>();
-    billingData.bills.forEach((bill:any)=>{
+    billingData.bills.forEach((bill: any) => {
       let facilitiesObj = {
         "Facility Name": bill.base.billing_contact,
         "Address": bill.base.service_address.split(",")[0],
@@ -210,7 +172,7 @@ export class ParseService {
         "State": bill.base.service_address.split(",")[2].substring(0, 3),
         "Contact Name": bill.base.billing_contact,
       }
-      if(!facilitiesSet.has(JSON.stringify(facilitiesObj))){
+      if (!facilitiesSet.has(JSON.stringify(facilitiesObj))) {
         facilitiesSet.add(JSON.stringify(facilitiesObj))
         facilitiesSheet.addRow(facilitiesObj)
       }
@@ -235,12 +197,12 @@ export class ParseService {
         "Meter Name (Display)": bill.base.service_tariff,
         "Collection Unit": bill.base.bill_total_unit
       }
-      if(!metersSet.has(JSON.stringify(metersObj))){
+      if (!metersSet.has(JSON.stringify(metersObj))) {
         metersSet.add(JSON.stringify(metersObj))
         metersutilitiesSheet.addRow(metersObj)
       }
     })
-    
+
     return workbook;
     // workbook.xlsx.writeBuffer()
     //   .then((buffer: BlobPart) => {
@@ -270,18 +232,18 @@ export class ParseService {
   static validateIncomingData(jsonData: any) {
 
   }
-  static convertExcelToJson(workbook:ExcelJS.Workbook):any{
-    let jsonData:{sheetName:string;data:object[]}[] = [];
-    workbook.eachSheet((worksheet)=>{
-      let sheetData:object[] = [];
-      worksheet.eachRow((row)=>{
-        let rowData: {[key:string]:any} = {};
-        row.eachCell((cell,colNumber)=>{
-          rowData[`Column${colNumber}`]=cell.value;
+  static convertExcelToJson(workbook: ExcelJS.Workbook): any {
+    let jsonData: { sheetName: string; data: object[] }[] = [];
+    workbook.eachSheet((worksheet) => {
+      let sheetData: object[] = [];
+      worksheet.eachRow((row) => {
+        let rowData: { [key: string]: any } = {};
+        row.eachCell((cell, colNumber) => {
+          rowData[`Column${colNumber}`] = cell.value;
         });
         sheetData.push(rowData);
       });
-      jsonData.push({sheetName:worksheet.name,data:sheetData});
+      jsonData.push({ sheetName: worksheet.name, data: sheetData });
     });
     return jsonData;
   };
