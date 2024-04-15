@@ -103,35 +103,10 @@ async apiFindEmail(email: string){
   }
 }
 
-async apiNew(){
-  // generates new users for testing
-  try {
-    const data: any = await this.apiServ.get(Constants.API_ENDPOINT1 + 'forms?' + this.accessToken);
-    console.log(data)
-    console.log(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken)
-    const referral: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'forms/' + data.forms[0].uid + '/test-submit?' + this.accessToken, '{"utility": "DEMO", "scenario": "residential"}')
-    console.log(referral)
-    var TestauthForm: any = await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(this.apiServ.get(Constants.API_ENDPOINT1 + 'authorizations/?referrals=' + referral.referral + '&include=meters&' + this.accessToken));
-      }, 25000); // 25000 milliseconds = 25 seconds
-    });
-
-    console.log(TestauthForm)
- 
-  } catch (error) {
-    console.log(error)
-  }
-
-}
-
   async apiCall (authToken: string,startDate?:string,endDate?:string) {
     //for returning users that have their auth token
     console.log (authToken)
-    //mark token 436742
-    //437638
-
-    
+        
     const button = document.getElementById("spin-button")as HTMLButtonElement;
     button.classList.add("spin");
     button.disabled=true;
