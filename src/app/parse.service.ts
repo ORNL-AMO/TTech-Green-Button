@@ -161,44 +161,6 @@ export class ParseService {
       { header: 'Date', key: "Date", width: 20 }
     ];
 
-    //Test the above objects
-    // console.log(billingData);
-    // console.log(billingData.base);
-    // console.log(billingData.sources);
-    // console.log(billingData.line_items);
-    // console.log(billingData.tiers);
-
-    // facilitiesSheet.addRow({
-    //   "Facility Name": billingData.base.billing_contact,
-    //   "Address": billingData.base.service_address.split(",")[0],
-    //   "Country": "US",
-    //   "City": billingData.base.service_address.split(",")[1],
-    //   "State": billingData.base.service_address.split(",")[2].substring(0, 3),
-    //   "Contact Name": billingData.base.billing_contact,
-    // })
-
-    // electricitySheet.addRow({
-    //   "Meter Number": billingData.meter_uid,
-    //   "Read Date": billingData.base.bill_end_date,
-    //   "Total Consumption": billingData.base.bill_total_kwh,
-    //   "Total Cost": billingData.base.bill_total_cost,
-    //   "Total Consuption": billingData.base.bill_total_kwh
-    // })
-
-    // predictorsSheet.addRow({
-    //   "Facility Name": billingData.base.billing_contact,
-    //   "Date": billingData.base.bill_end_date
-    // })
-
-    // meterData.meters.forEach((element: any) => {
-    //   console.log(element.uid);
-    //   metersutilitiesSheet.addRow({
-    //     "Meter Number (unique)": element.uid,
-    //     "Source": element.base.service_class,
-    //     "Meter Name (Display)": element.base.service_tariff,
-    //     "Collection Unit": billingData.base.bill_total_unit
-    //   })
-    // });
     const facilitiesSet = new Set<String>();
     const metersSet = new Set<String>();
     billingData.bills.forEach((bill:any)=>{
