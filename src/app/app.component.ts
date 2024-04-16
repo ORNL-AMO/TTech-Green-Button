@@ -41,15 +41,15 @@ export class AppComponent implements OnInit {
 
   onChange(event: any) {
     console.log(event);
-    this.file = event.target.file[0];
+    this.file = event.target.file;
 
     if(this.file){
       console.log("File recieved");
       const reader = new FileReader();
-      reader.onload =()=>{
+      reader.onload =async ()=>{
         let jdata: string = JSON.parse(reader.result as string);
         console.log(jdata);
-        //this.parsedWorkbook = ParseService.convertJSONToExcel(jdata);
+        this.parsedWorkbook = await ParseService.convertJSONToExcel(this.billsForm)
         this.fileText = ParseService.convertExcelToJson(this.parsedWorkbook);
         this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Export Data</h3></div><div class="card-body"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
     }

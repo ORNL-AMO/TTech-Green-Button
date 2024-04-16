@@ -27,22 +27,18 @@
           </div>
           <div class="container">
             <form id="inputFile">
-              <div class="row">
-                <div class="import-button">
-                  <label class="btn btn-primary btn-lg" for="dataFile" style="width: 160px;">Import Data</label>
-                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
-                </div>
+
                 <div ngbDropdown class="export-button">
-                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;"
+                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown"
                     ngbDropdownToggle>Export Data</button>
                   <div ngbDropdownMenu aria-labelledby="exportDropdown">
                     <div class="d-grid">
-                      <button ngbDropdownItem type="button" id="btnExportExcel" (click)="exportAsExcel()">Export as XLSX</button>
+                      <button ngbDropdownItem type="button"  (click)="exportAsExcel()">Export as XLSX</button>
                       <button ngbDropdownItem type="button" (click)="exportAsJson()">Export as JSON</button>
                       <button ngbDropdownItem type="button" (click)="exportAsXML()">Export as XML</button>
                     </div>
                   </div>
-                </div>
+
               </div>
             </form>
           </div>
