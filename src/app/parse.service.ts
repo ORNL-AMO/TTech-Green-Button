@@ -1,4 +1,7 @@
+import { rejects } from 'assert';
+import { error } from 'console';
 import * as ExcelJS from 'exceljs';
+import { resolve } from 'path';
 import X2JS from 'x2js';
 
 export class ParseService {
@@ -30,253 +33,118 @@ export class ParseService {
  * @param {any} billingData - The JSON data to be converted into an Excel file.
  * @returns {ExcelJS.Workbook} - The created Excel file.
  */
-  static convertJSONToExcel(billingData: any) {
-    //Create a workbook
-    const workbook = new ExcelJS.Workbook();
+  static async convertJSONToExcel(billingData: any) {
+    return new Promise<ExcelJS.Workbook>((resolve,reject) =>{
+      // create workbook
+      let workbook = new ExcelJS.Workbook();
+      var request = new XMLHttpRequest();
+      request.open('GET', 'assets/VERIFI-Import-Data.xlsx', true);
+      request.responseType = 'blob';
+      request.onload = () =>{
+        workbook.xlsx.load(request.response).then(()=>{
+          // get worksheets
+            let facilityWorksheet:ExcelJS.Worksheet = workbook.getWorksheet('Facilities')!;
+            let metersWorksheet:ExcelJS.Worksheet = workbook.getWorksheet('Meters-Utilities')!;
+            let electricityWorksheet:ExcelJS.Worksheet = workbook.getWorksheet('Electricity')!;
+            let predictorsWorksheet:ExcelJS.Worksheet = workbook.getWorksheet('Predictors')!;
+            let pindex = 2;
+            let findex = 2;
+            let eindex = 2;
+            let mindex = 2;
+            const facilitiesSet = new Set<String>();
+            const metersSet = new Set<String>();
+            billingData.bills.forEach((bill: any) => {
+              let facilitiesObj = {
+                "Facility Name": bill.base.billing_contact,
+                "Address": bill.base.service_address.split(",")[0],
+                "Country": "US",
+                "City": bill.base.service_address.split(",")[1],
+                "State": bill.base.service_address.split(",")[2].substring(0, 3),
+                "Contact Name": bill.base.billing_contact,
+              }
+              if (!facilitiesSet.has(JSON.stringify(facilitiesObj))) {
+                facilitiesSet.add(JSON.stringify(facilitiesObj))
+                // Facility Name
+                facilityWorksheet.getCell('A'+findex).value = bill.base.billing_contact;
+                // Facility Address
+                facilityWorksheet.getCell('B'+findex).value = bill.base.service_address.split(",")[0]
+                // Facility Country
+                facilityWorksheet.getCell('C'+findex).value = "United States of America (the)";
+                // Facility State
+                facilityWorksheet.getCell('D'+findex).value = bill.base.service_address.split(",")[2].trim().split(' ')[0]
+                // Facility City
+                facilityWorksheet.getCell('E'+findex).value = bill.base.service_address.split(",")[1];
+                // Facility Zip
+                facilityWorksheet.getCell('F'+findex).value = bill.base.service_address.split(",")[2].trim().split(' ')[1]
+                // Facility Contact Name
+                facilityWorksheet.getCell('J'+findex).value = bill.base.billing_contact;
+                findex++
+              }
+              let metersObj = {
+                "Facility Name": bill.base.billing_contact,
+                "Meter Number (unique)": bill.meter_uid,
+                "Source": bill.base.service_class,
+                "Meter Name (Display)": bill.base.service_tariff,
+                "Collection Unit": bill.base.bill_total_unit
+              }
+              if (!metersSet.has(JSON.stringify(metersObj))) {
+                metersSet.add(JSON.stringify(metersObj))
+                 //A: Facility name
+                  metersWorksheet.getCell('A' + mindex).value = bill.base.billing_contact;
+                  //B: Metter Number (unique)
+                  metersWorksheet.getCell('B' + mindex).value = bill.meter_uid;
+                  //C: Source
+                  if(bill.base.service_class == "electric"){
+                    //C: Source
+                    metersWorksheet.getCell('C' + mindex).value = "Electricity";
+                    //D: Scope
+                    metersWorksheet.getCell('D' + mindex).value = "Scope 2: Purchased Electricity";
+                    //F: Meter Group
+                    metersWorksheet.getCell('F' + mindex).value = "Electricity";
+                    //G: Calendarize Data?
+                    metersWorksheet.getCell('G' + mindex).value = "Calendarize";
+                  }
+                  
+                  //E: Meter Name (Display)
+                  metersWorksheet.getCell('E' + mindex).value = bill.base.service_tariff;
+                  //J: Collection Unit
+                  if(bill.base.bill_total_unit == "kwh"){
+                    metersWorksheet.getCell('J' + mindex).value = "kWh";
+                  }
+                  
+                  //P: Site To Source
+                  metersWorksheet.getCell('P' + mindex).value = 3;
+                  mindex++;
+              }
 
-    //Add worksheets to the workbook following the VERIFI format
-    const facilitiesSheet = workbook.addWorksheet('Facilities');
-    const metersutilitiesSheet = workbook.addWorksheet('Meters-Utilities');
-    const electricitySheet = workbook.addWorksheet('Electricity');
-    const stationaryotherSheet = workbook.addWorksheet('Stationary Fuel - Other Energy');
-    const mobileSheet = workbook.addWorksheet('Mobile Fuel');
-    const waterSheet = workbook.addWorksheet('Water');
-    const otheremmissionsSheet = workbook.addWorksheet('Other Utility - Emission');
-    const predictorsSheet = workbook.addWorksheet('Predictors');
+              // add to predictors sheet
+              // Facility Name
+              predictorsWorksheet.getCell('A' + pindex).value = bill.base.billing_contact;
+              // Date
+              predictorsWorksheet.getCell('B' + pindex).value = bill.base.bill_end_date;
+              pindex++;
 
-    //Facilities
-    facilitiesSheet.columns = [
-      { header: 'Facility Name', key: "Facility Name", width: 20 },
-      { header: 'Address', key: "Address", width: 20 },
-      { header: 'Country', key: "Country", width: 20 },
-      { header: 'State', key: "State", width: 20 },
-      { header: 'City', key: "City", width: 20 },
-      { header: 'NAICS Code 2 digit', key: "NAICS Code 2 digit", width: 20 },
-      { header: 'NAICS Code 3 digit', key: "NAICS Code 3 digit", width: 20 },
-      { header: 'Contact Name', key: "Contact Name", width: 20 },
-      { header: 'Contact Phone', key: "Contact Phone", width: 20 },
-      { header: 'Contact Email', key: "Contact Email", width: 20 },
-    ];
+              // add to electricity sheet
+              //A: Meter Number
+              electricityWorksheet.getCell('A' + eindex).value = bill.meter_uid;
+              //B: Read Date
+              electricityWorksheet.getCell('B' + eindex).value = bill.base.bill_end_date;
+              //C: Total Consumption
+              electricityWorksheet.getCell('C' + eindex).value = bill.base.bill_total_kwh;
+              //F: Total Cost
+              electricityWorksheet.getCell('F' + eindex).value = bill.base.bill_total_cost;
+              eindex++;
+            })
 
-
-
-    //Meters-Utilities
-    metersutilitiesSheet.columns = [
-      { header: 'Facility Name', key: "Facility Name", width: 20 },
-      { header: 'Meter Number (unique)', key: "Meter Number (unique)", width: 20 },
-      { header: 'Source', key: "Source", width: 20 },
-      { header: 'Scope', key: "Scope", width: 20 },
-      { header: 'Meter Name (Display)', key: "Meter Name (Display)", width: 20 },
-      { header: 'Meter Group', key: "Meter Group", width: 20 },
-      { header: 'Calendarize Data?', key: "Calendarize Data?", width: 20 },
-      { header: 'Phase or Vehicle', key: "Phase or Vehicle", width: 20 },
-      { header: 'Fuel or Emission', key: "Fuel or Emission", width: 20 },
-      { header: 'Collection Unit', key: "Collection Unit", width: 20 },
-      { header: 'Energy Unit', key: "Energy Unit", width: 20 },
-      { header: 'Distance Unit', key: "Distance Unit", width: 20 },
-      { header: 'Estimation Method', key: "Estimation Method", width: 20 },
-      { header: 'Heat Capacity or Fuel Efficiency', key: "Heat Capacity or Fuel Efficiency", width: 20 },
-      { header: 'Include In Energy', key: "Include In Energy", width: 20 },
-      { header: 'Site To Source', key: "Site To Source", width: 20 },
-      { header: 'Agreement Type', key: "Agreement Type", width: 20 },
-      { header: 'Retain RECS', key: "Retain RECS", width: 20 },
-      { header: 'Account Number', key: "Account Number", width: 20 },
-      { header: 'Utility Supplier', key: "Utility Supplier", width: 20 },
-      { header: 'Notes', key: "Notes", width: 20 },
-      { header: 'Building / Location', key: "Building / Location", width: 20 }
-    ];
-
-    // setMetersWorksheet(workbook: ExcelJS.Workbook, facilityId?: string): ExcelJS.Worksheet {
-    //   let worksheet: ExcelJS.Worksheet = workbook.getWorksheet('Meters-Utilities');
-    //   let facilityMeters: Array<IdbUtilityMeter> = this.utilityMeterDbService.accountMeters.getValue();
-    //   if (facilityId) {
-    //     facilityMeters = facilityMeters.filter(meter => { return meter.facilityId == facilityId });
-    //   }
-    //   let accountFacilities: Array<IdbFacility> = this.facilityDbService.accountFacilities.getValue();
-    //   let index: number = 2;
-    //   facilityMeters.forEach(meter => {
-    //     let facilityName: string = accountFacilities.find(facility => { return facility.guid == meter.facilityId }).name;
-    //     //A: Facility name
-    //     worksheet.getCell('A' + index).value = 
-    //     //B: Metter Number (unique)
-    //     worksheet.getCell('B' + index).value = 
-    //     //C: Source
-    //     worksheet.getCell('C' + index).value = 
-    //     //D: Scope
-    //     worksheet.getCell('D' + index).value = 
-    //     //E: Meter Name (Display)
-    //     worksheet.getCell('E' + index).value = 
-    //     //F: Meter Group
-    //     worksheet.getCell('F' + index).value = 
-    //     //G: Calendarize Data?
-    //     worksheet.getCell('G' + index).value = 
-    //     //H: Phase or Vehicle
-    //     worksheet.getCell('H' + index).value = 
-    //     //I: Fuel or Emissions
-    //     worksheet.getCell('I' + index).value = 
-    //     //J: Collection Unit
-    //     worksheet.getCell('J' + index).value = 
-    //     //K: Energy Unit
-    //     worksheet.getCell('K' + index).value = 
-    //     //L: Distance Unit
-    //     worksheet.getCell('L' + index).value = 
-    //     //M: Estimation Method
-    //     worksheet.getCell('M' + index).value = 
-    //     //N: Heat Capacity or Fuel Efficiency
-    //     worksheet.getCell('N' + index).value = 
-    //     //O: Include in Energy
-    //     worksheet.getCell('O' + index).value = 
-    //     //P: Site To Source
-    //     worksheet.getCell('P' + index).value =
-    //     //Q: Agreement Type
-    //     worksheet.getCell('Q' + index).value = 
-    //     //R: Retain RECs
-    //     worksheet.getCell('R' + index).value = 
-    //     //S: Account Number
-    //     worksheet.getCell('S' + index).value = 
-    //     //T: Utility Supplier
-    //     worksheet.getCell('T' + index).value = 
-    //     //U: Notes
-    //     worksheet.getCell('U' + index).value = 
-    //     //V: Building / Location
-    //     worksheet.getCell('V' + index).value = 
-    //     index++;
-    //   })
-    //   return worksheet;
-    // }
-
-    //Electricity
-    electricitySheet.columns = [
-      { header: 'Meter Number', key: "Meter Number", width: 20 },
-      { header: 'Read Date', key: "Read Date", width: 20 },
-      { header: 'Total Consuption', key: "Total Consuption", width: 20 },
-      { header: 'Total Real Demand', key: "Total Real Demand", width: 20 },
-      { header: 'Total Billed Demand', key: "Total Billed Demand", width: 20 },
-      { header: 'Total Cost', key: "Total Cost", width: 20 },
-      { header: 'Non-energy Charge', key: "Non-energy Charge", width: 20 },
-      { header: 'Block 1 Consuption', key: "Block 1 Consuption", width: 20 },
-      { header: 'Block 1 Consuption Charge', key: "Block 1 Consuption Charge", width: 20 },
-      { header: 'Block 2 Consuption', key: "Block 2 Consuption", width: 20 },
-      { header: 'Block 2 Consuption Charge', key: "Block 2 Consuption Charge", width: 20 },
-      { header: 'Block 3 Consuption', key: "Block 3 Consuption", width: 20 },
-      { header: 'Block 3 Consuption Charge', key: "Block 3 Consuption Charge", width: 20 },
-      { header: 'Other Consuption', key: "Other Consuption", width: 20 },
-      { header: 'Other Consuption Charge', key: "Other Consuption Charge", width: 20 },
-      { header: 'On Peak Amount', key: "On Peak Amount", width: 20 },
-      { header: 'On Peak Charge', key: "On Peak Charge", width: 20 },
-      { header: 'Off Peak Amount', key: "Off Peak Amount", width: 20 },
-      { header: 'Off Peak Charge', key: "Off Peak Charge", width: 20 },
-      { header: 'Transmission & Delivery Charge', key: "Transmission & Delivery Charge", width: 20 },
-      { header: 'Power Factor', key: "Power Factor", width: 20 },
-      { header: 'Power Factor Charge', key: "Power Factor Charge", width: 20 },
-      { header: 'Local Sales Tax', key: "Local Sales Tax", width: 20 },
-      { header: 'State Sales Tax', key: "State Sales Tax", width: 20 },
-      { header: 'Late Payment', key: "Late Payment", width: 20 },
-      { header: 'Other Charge', key: "Other Charge", width: 20 }
-    ];
-
-    //Stationary Fuel - Other Energy
-    stationaryotherSheet.columns = [
-      { header: 'Meter Number', key: "Meter Number", width: 20 },
-      { header: 'Read Date', key: "Read Date", width: 20 },
-      { header: 'Total Consumption', key: "Total Consumption", width: 20 },
-      { header: 'Total Cost', key: "Total Cost", width: 20 },
-      { header: 'Higher Heating Value', key: "Higher Heating Value", width: 20 },
-      { header: 'Commodity Charge', key: "Commodity Charge", width: 20 },
-      { header: 'Delivery Charge', key: "Delivery Charge", width: 20 },
-      { header: 'Other Charge', key: "Other Charge", width: 20 },
-      { header: 'Demand Usage', key: "Demand Usage", width: 20 },
-      { header: 'Demand Charge', key: "Demand Charge", width: 20 },
-      { header: 'Local Sales Tax', key: "Local Sales Tax", width: 20 },
-      { header: 'State Sales Tax', key: "State Sales Tax", width: 20 },
-      { header: 'Late Payment', key: "Late Payment", width: 20 },
-    ];
-
-    //Mobile Fuel
-    mobileSheet.columns = [
-      { header: 'Meter Number', key: "Meter Number", width: 20 },
-      { header: 'Read Date', key: "Read Date", width: 20 },
-      { header: 'Total Consumption or Total Distance', key: "Total Consumption or Total Distance", width: 20 },
-      { header: 'Fuel Efficiency', key: "Fuel Efficiency", width: 20 },
-      { header: 'Total Cost', key: "Total Cost", width: 20 },
-      { header: 'Other Charge', key: "Other Charge", width: 20 }
-    ];
-
-    //Water
-    waterSheet.columns = [
-      { header: 'Meter Number', key: "Meter Number", width: 20 },
-      { header: 'Read Date', key: "Read Date", width: 20 },
-      { header: 'Total Consuption', key: "Total Consuption", width: 20 },
-      { header: 'Total Cost', key: "Total Cost", width: 20 },
-      { header: 'Commodity Charge', key: "Commodity Charge", width: 20 },
-      { header: 'Delivery Charge', key: "Delivery Charge", width: 20 },
-      { header: 'Other Charge', key: "Other Charge", width: 20 },
-      { header: 'Demand Usage', key: "Demand Usage", width: 20 },
-      { header: 'Demand Charge', key: "Demand Charge", width: 20 },
-      { header: 'Local Sales Tax', key: "Local Sales Tax", width: 20 },
-      { header: 'State Sales Tax', key: "State Sales Tax", width: 20 },
-      { header: 'Late Payment', key: "Late Payment", width: 20 },
-    ];
-
-    //Other Utility - Emission
-    otheremmissionsSheet.columns = [
-      { header: 'Meter Number', key: "Meter Number", width: 20 },
-      { header: 'Read Date', key: "Read Date", width: 20 },
-      { header: 'Total Consuption', key: "Total Consuption", width: 20 },
-      { header: 'Total Cost', key: "Total Cost", width: 20 },
-      { header: 'Other Charge', key: "Other Charge", width: 20 }
-    ];
-
-    //Predictors
-    predictorsSheet.columns = [
-      { header: 'Facility Name', key: "Facility Name", width: 20 },
-      { header: 'Date', key: "Date", width: 20 }
-    ];
-
-    const facilitiesSet = new Set<String>();
-    const metersSet = new Set<String>();
-
-    billingData.bills.forEach((bill: any) => {
-      let facilitiesObj = {
-        "Facility Name": bill.base.billing_contact,
-        "Address": bill.base.service_address.split(",")[0],
-        "Country": "US",
-        "City": bill.base.service_address.split(",")[1],
-        "State": bill.base.service_address.split(",")[2].substring(0, 3),
-        "Contact Name": bill.base.billing_contact,
-      }
-      if (!facilitiesSet.has(JSON.stringify(facilitiesObj))) {
-        facilitiesSet.add(JSON.stringify(facilitiesObj))
-        facilitiesSheet.addRow(facilitiesObj)
-      }
-
-      electricitySheet.addRow({
-        "Meter Number": bill.meter_uid,
-        "Read Date": bill.base.bill_end_date,
-        "Total Consumption": bill.base.bill_total_kwh,
-        "Total Cost": bill.base.bill_total_cost,
-        "Total Consuption": bill.base.bill_total_kwh
+            resolve(workbook);
+          }).catch((error):void =>{
+            reject(error)
+          })
+        }
+        request.send();
       })
 
-      predictorsSheet.addRow({
-        "Facility Name": bill.base.billing_contact,
-        "Date": bill.base.bill_end_date
-      })
-
-      let metersObj = {
-        "Facility Name": bill.base.billing_contact,
-        "Meter Number (unique)": bill.meter_uid,
-        "Source": bill.base.service_class,
-        "Meter Name (Display)": bill.base.service_tariff,
-        "Collection Unit": bill.base.bill_total_unit
-      }
-      if (!metersSet.has(JSON.stringify(metersObj))) {
-        metersSet.add(JSON.stringify(metersObj))
-        metersutilitiesSheet.addRow(metersObj)
-      }
-    })
-
-    return workbook;
+    
   }
 
   /**

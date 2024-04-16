@@ -20,7 +20,7 @@ export class ExportService {
         let url = window.URL.createObjectURL(blob);
 
         a.href = url;
-        a.download = "convertedData.xlsx";
+        a.download = "XLSXExport.xlsx";
 
         document.body.appendChild(a);
         a.click();
@@ -44,7 +44,7 @@ export class ExportService {
     let url = window.URL.createObjectURL(blob);
 
     a.href = url;
-    a.download = "jstest.json";
+    a.download = "JSONExport.json";
 
     document.body.appendChild(a);
     a.click();
@@ -63,7 +63,7 @@ export class ExportService {
     let url = window.URL.createObjectURL(blob);
 
     a.href = url;
-    a.download = "xmltest.xml";
+    a.download = "XMLExport.xml";
 
     document.body.appendChild(a);
     a.click();

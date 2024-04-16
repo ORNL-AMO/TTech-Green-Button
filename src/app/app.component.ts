@@ -118,7 +118,6 @@ async apiFindEmail(email: string){
         }, 1000); // 25000 milliseconds = 25 seconds
       });
       console.log(TestauthForm);
-      console.log(TestauthForm.meters.meters[0].uid)
 
       // creates a string of meter numbers to be use in the meters post below
       let meterID = '';
@@ -126,13 +125,11 @@ async apiFindEmail(email: string){
         meterID += '"'+ element.uid +'",'
       });
       meterID = meterID.slice(0,-1)
-      console.log(meterID)
 
       const meterHist: any = await this.apiServ.post(Constants.API_ENDPOINT1 + 'meters/historical-collection?' + this.accessToken, '{"meters": ['+ meterID +']}');
 
       //removes all " in the string because they are no longer needed
       meterID = meterID.replaceAll('"','') 
-      console.log(meterID)
 
       // Calls utilityAPI and has to wait for it to populate with data. This can take a while usually under 2 min
       let ticks = 1000
@@ -168,12 +165,9 @@ async apiFindEmail(email: string){
 
       //calls the parse and export functions when needed.
       console.log(this.billsForm);
-      //this.parsedWorkbook = ParseService.convertJSONToExcel(this.billsForm)
+      this.parsedWorkbook = await ParseService.convertJSONToExcel(this.billsForm)
       this.fileText = ParseService.convertExcelToJson(this.parsedWorkbook)
       this.displayFile = '<div class="card bg-light"><div class="card-header"><h3>Export Data</h3></div><div class="card-body"><p>'+JSON.stringify(this.fileText,null,2)+'</p></div></div>';
-
-      // remove in final iteration
-      ExportService.exportExcel(this.parsedWorkbook)
 
     } catch (error) {
       console.log(error)
