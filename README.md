@@ -4,7 +4,7 @@
 
 The TN Tech Green Button Initiative focuses on solving energy management challenges in line with the Better Plants program. Utilizing the Verifi system developed by ORNL, this application processes data retrieved from utility APIs. It aligns with the Green Button data standard to assist industries in monitoring and verifying energy savings.
 
-![Green Button UI](/TTech-Green-Button/src/assets/images/GreenButton.PNG)
+![Green Button UI](src/assets/images/GreenButton.png)
 
 
 ## Features
