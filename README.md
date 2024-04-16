@@ -32,6 +32,7 @@ To get started with the Green Button Initiative project on your local system, pl
 ## Authorization Key
 
 Users must obtain a unique authorization key from their UtilityAPI account to use this application. Substitute `<your_key>` in the application with your individual key. 
+- **Enter your access token before using:** Make sure to change the accessToken field in the app.component.ts file before using.
 
 ## Acknowledgments
 
