@@ -26,15 +26,14 @@
             </form>
           </div>
           <div class="container">
-            <form id="inputFile">
-
+            <form id="inputFile" class="col-12">
                 <div ngbDropdown class="export-button">
-                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown"
+                  <button type="button" class="btn btn-primary btn-lg col-9" id="exportDropdown"
                     ngbDropdownToggle>Export Data</button>
-                  <div ngbDropdownMenu aria-labelledby="exportDropdown">
+                  <div ngbDropdownMenu aria-labelledby="exportDropdown" class="col-9">
                     <div class="d-grid">
-                      <button ngbDropdownItem type="button"  (click)="exportAsExcel()">Export as XLSX</button>
-                      <button ngbDropdownItem type="button" (click)="exportAsJson()">Export as JSON</button>
+                      <button ngbDropdownItem type="button" class="col-9" (click)="exportAsExcel()">Export as XLSX</button>
+                      <button ngbDropdownItem type="button"  (click)="exportAsJson()">Export as JSON</button>
                       <button ngbDropdownItem type="button" (click)="exportAsXML()">Export as XML</button>
                     </div>
                   </div>
