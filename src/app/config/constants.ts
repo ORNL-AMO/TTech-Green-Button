@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 
+
+//create a constant because the endpoint will not change 
 export class Constants {
     static API_ENDPOINT(API_ENDPOINT: string) {
       throw new Error('Method not implemented.');
