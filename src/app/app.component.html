@@ -26,19 +26,15 @@
             </form>
           </div>
           <div class="container">
-            <form id="inputFile">
+            <form id="inputFile" class="col-8">
               <div class="row">
-                <div class="import-button">
-                  <label class="btn btn-primary btn-lg" for="dataFile" style="width: 160px;">Import Data</label>
-                  <input type="file" id="dataFile" style="display: none;" #importedFile (change)="onChange($event)">
-                </div>
                 <div ngbDropdown class="export-button">
-                  <button type="button" class="btn btn-primary btn-lg" id="exportDropdown" style="width: 160px;"
+                  <button type="button" class="btn btn-primary btn-lg col-10 mt-2" id="exportDropdown"
                     ngbDropdownToggle>Export Data</button>
-                  <div ngbDropdownMenu aria-labelledby="exportDropdown">
+                  <div ngbDropdownMenu aria-labelledby="exportDropdown" class="col-10">
                     <div class="d-grid">
-                      <button ngbDropdownItem type="button" id="btnExportExcel" (click)="exportAsExcel()">Export as XLSX</button>
-                      <button ngbDropdownItem type="button" (click)="exportAsJson()">Export as JSON</button>
+                      <button ngbDropdownItem type="button" class="col-10" (click)="exportAsExcel()">Export as XLSX</button>
+                      <button ngbDropdownItem type="button"  (click)="exportAsJson()">Export as JSON</button>
                       <button ngbDropdownItem type="button" (click)="exportAsXML()">Export as XML</button>
                     </div>
                   </div>
@@ -46,7 +42,7 @@
               </div>
             </form>
           </div>
-          <div class="row col-10 mt-2">
+          <div class="row col-8 mt-2">
             <p class="text-light">Enter Email below to search for authorization key:</p>
             <div id="divSearching" class="text-light" style="display: none;">
               <h4>Searching...</h4>
@@ -58,7 +54,7 @@
           </div>
         </div>
         <div class="right-section"  style="white-space: pre;">
-          <div style="max-height: 900px; overflow-y: auto;" [innerHTML]="displayFile">
+          <div style="max-height: 900px; max-width: 700px; overflow-y: auto; overflow-x: hidden;" [innerHTML]="displayFile">
 
           </div>
         </div>
